@@ -1,0 +1,12 @@
+[project]
+name = "apparel-image-eval"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.5.5",
+    "openai>=3.57.0",
+    "opencv-python-headless>=5.1.0.95",
+    "pillow>=13.0.0",
+    "requests>=2.34.2",
+    "scikit-image>=0.26.0",
+]

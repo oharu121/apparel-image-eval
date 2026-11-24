@@ -1,0 +1,86 @@
+{
+  "objectID": 159177,
+  "isHighlight": false,
+  "accessionNumber": "2009.300.625a–c",
+  "accessionYear": "2009",
+  "isPublicDomain": true,
+  "primaryImage": "https://images.metmuseum.org/CRDImages/ci/original/28.220_28.218a-c_front_CP4.jpg",
+  "primaryImageSmall": "https://images.metmuseum.org/CRDImages/ci/web-large/28.220_28.218a-c_front_CP4.jpg",
+  "additionalImages": [
+    "https://images.metmuseum.org/CRDImages/ci/original/25.846,28.218 bw.JPG",
+    "https://images.metmuseum.org/CRDImages/ci/original/28.218_view1 bw.JPG",
+    "https://images.metmuseum.org/CRDImages/ci/original/28.220_28.218a-c_side_CP4.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/28.218_view2 bw.JPG"
+  ],
+  "constituents": null,
+  "department": "Costume Institute",
+  "objectName": "Suit",
+  "title": "Suit",
+  "culture": "American",
+  "period": "",
+  "dynasty": "",
+  "reign": "",
+  "portfolio": "",
+  "artistRole": "",
+  "artistPrefix": "",
+  "artistDisplayName": "",
+  "artistDisplayBio": "",
+  "artistSuffix": "",
+  "artistAlphaSort": "",
+  "artistNationality": "",
+  "artistBeginDate": "",
+  "artistEndDate": "",
+  "artistGender": "",
+  "artistWikidata_URL": "",
+  "artistULAN_URL": "",
+  "objectDate": "ca. 1860",
+  "objectBeginDate": 1858,
+  "objectEndDate": 1862,
+  "medium": "wool, cotton, silk",
+  "dimensions": "",
+  "measurements": [
+    {
+      "elementName": "Length at CB",
+      "elementDescription": "a",
+      "elementMeasurements": {
+        "Length": 31.750063
+      }
+    },
+    {
+      "elementName": "Length at CB",
+      "elementDescription": "c",
+      "elementMeasurements": {
+        "Length": 38.100075
+      }
+    },
+    {
+      "elementName": "Length at CB",
+      "elementDescription": "b",
+      "elementMeasurements": {
+        "Length": 31.750063
+      }
+    }
+  ],
+  "creditLine": "Brooklyn Museum Costume Collection at The Metropolitan Museum of Art, Gift of the Brooklyn Museum, 2009; Gift of Mrs. Franklin W. Hopkins, 1928",
+  "geographyType": "",
+  "city": "",
+  "state": "",
+  "county": "",
+  "country": "",
+  "region": "",
+  "subregion": "",
+  "locale": "",
+  "locus": "",
+  "excavation": "",
+  "river": "",
+  "classification": "",
+  "rightsAndReproduction": "",
+  "linkResource": "",
+  "metadataDate": "2025-03-06T04:54:30Z",
+  "repository": "Metropolitan Museum of Art, New York, NY",
+  "objectURL": "https://www.metmuseum.org/art/collection/search/159177",
+  "tags": null,
+  "objectWikidata_URL": "",
+  "isTimelineWork": false,
+  "GalleryNumber": ""
+}

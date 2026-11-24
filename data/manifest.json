@@ -1,0 +1,131 @@
+{
+  "generic_rules": [
+    "Never send ground_truth/ to the model.",
+    "Inputs are CC0 / public domain only; every file has a row in data/SOURCES.csv.",
+    "Round 1 uses prompt_template unchanged for every case; prompt fixes go in round 2 and are logged as such.",
+    "Generate 3 samples per case x model x variant. The API has no seed, so samples are independent draws."
+  ],
+  "prompt_template": {
+    "T1": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric. Create a realistic e-commerce product photo of this exact garment made from this exact fabric: keep the silhouette and every construction detail from the drawing, and reproduce the fabric's colours, pattern and texture from the swatch. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add trims, prints or details that are not in the drawing.",
+    "T2": "Image 1 is a photo of a {item}. Image 2 is a swatch of a new fabric. Create the same garment, with the same shape, pose, lighting and construction details, made from the new fabric instead of the original one. {scale_note} Change nothing else.",
+    "T3": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric for this colourway. Create a realistic e-commerce product photo of this exact garment made from this exact fabric. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add trims, prints or details that are not in the drawing.",
+    "T4": "Image 1 is a photo of a {item}. Recolour the garment: {recolor}. Keep the shape, fabric texture, pattern layout, lighting and background exactly as they are. Change nothing else.",
+    "T5": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the base fabric. Image 3 is the {motif_name}. Create a realistic e-commerce product photo of this exact garment in this fabric, with the {motif_name} placed {placement}. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add details that are not in the drawing.",
+    "T6": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric. Create a realistic e-commerce product photo of this exact garment made from this exact fabric, reproducing the construction exactly as drawn, especially the {detail}. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add details that are not in the drawing."
+  },
+  "cases": [
+    {
+      "id": "C01",
+      "task": "T1",
+      "item": "dress",
+      "material": "plain weave",
+      "status": "planned",
+      "source": "Met Costume Institute, q=cotton dress"
+    },
+    {
+      "id": "C02",
+      "task": "T1",
+      "item": "garment",
+      "material": "stripe",
+      "status": "planned",
+      "source": "Met Costume Institute, q=stripe",
+      "autocheck": true
+    },
+    {
+      "id": "C03",
+      "task": "T1",
+      "item": "child's two-piece suit: jacket and pleated skirt in the swatch fabric with black velvet ribbon lattice trims, worn over a white cotton blouse with eyelet lace collar, jabot and cuffs, and white bloomers",
+      "material": "check / plaid",
+      "status": "ready",
+      "source": "The Met 159177 (Suit, ca. 1860, wool/cotton/silk, 2009.300.625a-c). The same photo also shows blouse 159178 (28.220), also public domain.",
+      "inputs": [
+        "inputs/line_drawing.png",
+        "inputs/fabric.jpg"
+      ],
+      "ground_truth": [
+        "ground_truth/photo.jpg"
+      ],
+      "fixture": {
+        "source_image": "source/met_159177_0.jpg",
+        "swatch_box": [
+          1300,
+          2300,
+          700,
+          560
+        ],
+        "garment_box": [
+          380,
+          700,
+          2560,
+          3160
+        ]
+      },
+      "scale_note": "The plaid is large: about five vertical repeats from the waistband to the skirt hem.",
+      "scale": {
+        "repeat_cm": null,
+        "garment_width_cm": null,
+        "expected_repeats_across": null,
+        "basis": "estimated from the photo: skirt ~1400px tall, vertical repeat ~280px; the Met record has no dimensions"
+      },
+      "autocheck": true,
+      "notes": "Line drawing traced by the image model from the ground-truth photo (synthetic). Swatch crop has one pleat fold down the middle that shifts the pattern; no flat area holds a full repeat. Round 1 item text wrongly says white bloomers; the bloomers in the ground truth are the plaid fabric."
+    },
+    {
+      "id": "C04",
+      "task": "T1",
+      "item": "garment",
+      "material": "knit",
+      "status": "planned",
+      "source": "Met Costume Institute, q=knit"
+    },
+    {
+      "id": "C05",
+      "task": "T1",
+      "item": "jacket",
+      "material": "tweed / texture",
+      "status": "planned",
+      "source": "Met Costume Institute, q=tweed"
+    },
+    {
+      "id": "C06",
+      "task": "T2",
+      "item": "dress",
+      "material": "C01 garment + C03 swatch",
+      "status": "planned",
+      "source": "reuses C01 and C03; no ground truth"
+    },
+    {
+      "id": "C07",
+      "task": "T3",
+      "item": "garment",
+      "material": "4 colourway swatches",
+      "status": "planned",
+      "source": "Met garment + Poly Haven / ambientCG fabric textures; scored on consistency across the set",
+      "autocheck": true
+    },
+    {
+      "id": "C08",
+      "task": "T4",
+      "item": "garment",
+      "material": "recolour to hex targets",
+      "status": "planned",
+      "source": "Met photo; check pixels outside the garment are unchanged"
+    },
+    {
+      "id": "C09",
+      "task": "T5",
+      "item": "shawl or bordered garment",
+      "material": "placement print / border / embroidery",
+      "status": "planned",
+      "source": "Met q=shawl / q=embroidered; Cooper Hewitt textile motifs"
+    },
+    {
+      "id": "C10",
+      "task": "T6",
+      "item": "bodice",
+      "material": "unusual sleeve or collar",
+      "status": "planned",
+      "source": "Met 1890s leg-of-mutton bodice or sailor collar"
+    }
+  ]
+}

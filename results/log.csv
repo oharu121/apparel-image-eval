@@ -1,0 +1,5 @@
+time,round,case,variant,sample,model,size,quality,latency_s,text_in_tokens,image_in_tokens,output_tokens,cost_usd,cost_source,file,error
+2026-11-24 20:23:02,0,C03,trace,1,gpt-image-2.6-sunburst,1024x1536,high,35.1,114,1505,1372,0.0538,usage,data/cases/C03/inputs/line_drawing.png,
+2026-11-24 20:26:36,1,C03,A,1,gpt-image-2.6-sunburst,1024x1536,medium,24.9,185,2368,1132,0.0538,usage,results/gpt-image-2.6-sunburst/C03/A_r1_s1.png,
+2026-11-24 20:27:01,1,C03,A,2,gpt-image-2.6-sunburst,1024x1536,medium,22.6,185,2368,1132,0.0538,usage,results/gpt-image-2.6-sunburst/C03/A_r1_s2.png,
+2026-11-24 20:27:23,1,C03,A,3,gpt-image-2.6-sunburst,1024x1536,medium,27.6,185,2368,1132,0.0538,usage,results/gpt-image-2.6-sunburst/C03/A_r1_s3.png,
