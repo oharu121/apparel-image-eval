@@ -3,6 +3,7 @@
     uv run scripts/fetch_met.py search plaid            # list candidates, PD status checked per object
     uv run scripts/fetch_met.py get C03 12345           # download object 12345 as the source photo for case C03
     uv run scripts/fetch_met.py get C03 12345 --primary-only
+    uv run scripts/fetch_met.py get C01 12345 --image 1993.42ab.jpg   # one specific view
 
 images.metmuseum.org serves scripts a bot challenge, so download the image in a browser, save it
 as data/cases/<case>/source/met_<id>_0.jpg, and run get --primary-only: existing files are not
@@ -53,15 +54,22 @@ def search(q, limit):
         time.sleep(0.3)
 
 
-def get(case_id, object_id, primary_only):
+def get(case_id, object_id, primary_only, image=None):
     o = obj(object_id)
     if not o["isPublicDomain"] or not o["primaryImage"]:
         sys.exit(f"object {object_id} is not public domain or has no image; refusing")
     d = case_dir(case_id) / "source"
     d.mkdir(parents=True, exist_ok=True)
     (d / f"met_{object_id}.json").write_text(json.dumps(o, indent=2, ensure_ascii=False))
-    urls = [o["primaryImage"]] + ([] if primary_only else o["additionalImages"])
-    for i, url in enumerate(urls):
+    urls = [o["primaryImage"]] + o["additionalImages"]
+    if image:
+        picks = [i for i, u in enumerate(urls) if u.rsplit("/", 1)[-1] == image]
+        if not picks:
+            sys.exit(f"{image} is not one of object {object_id}'s images: {[u.rsplit('/', 1)[-1] for u in urls]}")
+    else:
+        picks = [0] if primary_only else range(len(urls))
+    for i in picks:
+        url = urls[i]
         fn = d / f"met_{object_id}_{i}.jpg"
         if not fn.exists():
             r = requests.get(url, headers=UA, timeout=60)
@@ -92,8 +100,9 @@ def main():
     g.add_argument("case")
     g.add_argument("object_id", type=int)
     g.add_argument("--primary-only", action="store_true", help="skip the additional views")
+    g.add_argument("--image", help="only this view, by the filename the Met serves it under")
     a = ap.parse_args()
-    search(a.q, a.limit) if a.cmd == "search" else get(a.case, a.object_id, a.primary_only)
+    search(a.q, a.limit) if a.cmd == "search" else get(a.case, a.object_id, a.primary_only, a.image)
 
 
 if __name__ == "__main__":

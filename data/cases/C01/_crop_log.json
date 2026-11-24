@@ -1,0 +1,39 @@
+{
+  "case": "C01",
+  "source_image": "data/cases/C01/source/met_157319_0.jpg",
+  "made": "2026-11-24",
+  "files": {
+    "inputs/fabric.jpg": {
+      "crop": [
+        325,
+        680,
+        110,
+        220
+      ],
+      "colour_correction": "none (no reference card in source)"
+    },
+    "inputs/line_drawing_edges.png": {
+      "crop": [
+        230,
+        180,
+        960,
+        1720
+      ],
+      "method": "median+bilateral blur, Canny 30/90, speck removal"
+    },
+    "inputs/line_drawing.png": {
+      "crop": [
+        230,
+        180,
+        960,
+        1720
+      ],
+      "method": "median+bilateral blur, Canny 30/90, speck removal",
+      "copy_of": "inputs/line_drawing_edges.png"
+    },
+    "ground_truth/photo.jpg": {
+      "crop": null,
+      "method": "copy of source"
+    }
+  }
+}

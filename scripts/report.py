@@ -113,7 +113,7 @@ def main():
           "| Prompt | One template per task type, filled only from the case's item and scale fields; no per-case tuning in round 1 (templates in [data/manifest.json](data/manifest.json)) |",
           "| Samples | 3 per case x model x variant. The API has no seed, so samples are independent draws |",
           "| Variant A | line drawing + fabric swatch → product photo |",
-          "| Auto-checks | CIEDE2000 between the swatch's 4 dominant colours and the garment's; horizontal pattern repeat count by autocorrelation, compared with the ground truth's |",
+          "| Auto-checks | CIEDE2000 between the swatch's 4 dominant colours and the garment's; pattern repeat count by autocorrelation along the case's repeat axis, compared with the ground truth's |",
           "| Scoring | 1-5 on " + ", ".join(AXES) + " |", ""]
     notes = [c for c in cases if c.get("notes")]
     if notes:
@@ -135,9 +135,9 @@ def main():
         L += ["**Issues**", ""] + [f"- {s}" for s in e["issues"]] + [""]
         rows = [r for r in auto if r["case"] == c["id"]]
         if rows:
-            L += ["| Image | ΔE mean | ΔE max | Repeats across | vs ground truth |", "|---|---|---|---|---|"]
+            L += [f"| Image | ΔE mean | ΔE max | Repeats {rows[0]['repeat_axis']} | vs ground truth |", "|---|---|---|---|---|"]
             for r in rows:
-                L.append(f"| {r['file'].split('/')[-1]} | {r['dE_mean']} | {r['dE_max']} | {r['repeats_across']} | {r['repeats_vs_truth']} |")
+                L.append(f"| {r['file'].split('/')[-1]} | {r['dE_mean']} | {r['dE_max']} | {r['repeats']} | {r['repeats_vs_truth']} |")
             L += [""]
         sc = e.get("scores", {})
         if sc:

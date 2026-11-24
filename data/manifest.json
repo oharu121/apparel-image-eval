@@ -17,19 +17,73 @@
     {
       "id": "C01",
       "task": "T1",
-      "item": "dress",
-      "material": "plain weave",
-      "status": "planned",
-      "source": "Met Costume Institute, q=cotton dress"
+      "item": "girl's dress with a smocked and pin-tucked yoke, long sleeves with lace cuffs, a draped sash at the hip, petal-cut tiers and lace flounces at the hem, with satin ribbon bows, all in the swatch fabric with cream lace",
+      "material": "plain satin",
+      "status": "sourcing",
+      "source": "The Met 157319 (Dress, ca. 1885, silk/cotton, 2009.300.2489a, b)",
+      "notes": "Plain ivory silk satin; the only flat area is the upper sleeve, so the swatch is small. Construction is heavy (smocking, lace, petal tiers).",
+      "inputs": [
+        "inputs/line_drawing.png",
+        "inputs/fabric.jpg"
+      ],
+      "ground_truth": [
+        "ground_truth/photo.jpg"
+      ],
+      "fixture": {
+        "source_image": "source/met_157319_0.jpg",
+        "swatch_box": null,
+        "garment_box": [
+          230,
+          180,
+          960,
+          1720
+        ]
+      },
+      "scale_note": "",
+      "autocheck": false
     },
     {
       "id": "C02",
       "task": "T1",
-      "item": "garment",
+      "item": "woman's two-piece day dress: bodice with a crossover draped front and long sleeves, waistband, draped overskirt and pleated underskirt, all in the swatch fabric, with a small purple silk bow at the neck",
       "material": "stripe",
-      "status": "planned",
-      "source": "Met Costume Institute, q=stripe",
-      "autocheck": true
+      "status": "ready",
+      "source": "The Met 157306 (Dress, 1885-88, cotton/silk, 2009.300.2477a, b)",
+      "autocheck": true,
+      "fixture": {
+        "source_image": "source/met_157306_0.jpg",
+        "swatch_box": [
+          360,
+          1180,
+          340,
+          300
+        ],
+        "garment_box": [
+          150,
+          180,
+          740,
+          1590
+        ]
+      },
+      "scale_note": "",
+      "scale": {
+        "repeat": {
+          "axis": "down",
+          "band": [
+            0.7,
+            0.95
+          ]
+        },
+        "basis": "stripes counted down the underskirt, the only area where they run straight; measured against the ground truth by autocheck"
+      },
+      "notes": "Stripes run on the bias in the bodice and overskirt and horizontally on the underskirt; the swatch is cut from the underskirt. Line drawing traced by the image model from the ground-truth photo (synthetic).",
+      "inputs": [
+        "inputs/line_drawing.png",
+        "inputs/fabric.jpg"
+      ],
+      "ground_truth": [
+        "ground_truth/photo.jpg"
+      ]
     },
     {
       "id": "C03",
@@ -73,18 +127,68 @@
     {
       "id": "C04",
       "task": "T1",
-      "item": "garment",
+      "item": "short-sleeved knitted jacket with a stand collar, centre-front button closure, ribbed cuffs and hem, and gold patterned bands where drawn, in the swatch's knit",
       "material": "knit",
-      "status": "planned",
-      "source": "Met Costume Institute, q=knit"
+      "status": "ready",
+      "source": "The Met 84229 (Sweater, late 17th century, silk, 14.134.18)",
+      "fixture": {
+        "source_image": "source/met_84229_0.jpg",
+        "swatch_box": [
+          1450,
+          1620,
+          550,
+          170
+        ],
+        "garment_box": [
+          140,
+          130,
+          2440,
+          1870
+        ]
+      },
+      "scale_note": "",
+      "autocheck": false,
+      "notes": "Photographed flat. The swatch is the plain textured knit; the gold bands are described in text and drawn, not given as a swatch. Line drawing traced by the image model from the ground-truth photo (synthetic). The traced drawing straightens the real V-shaped front hem and makes the body boxier.",
+      "inputs": [
+        "inputs/line_drawing.png",
+        "inputs/fabric.jpg"
+      ],
+      "ground_truth": [
+        "ground_truth/photo.jpg"
+      ]
     },
     {
       "id": "C05",
       "task": "T1",
-      "item": "jacket",
-      "material": "tweed / texture",
-      "status": "planned",
-      "source": "Met Costume Institute, q=tweed"
+      "item": "man's double-breasted frock coat with notched lapels, a fitted waist seam, a full skirt and covered buttons, in the swatch fabric",
+      "material": "wool (dark, fine texture)",
+      "status": "ready",
+      "source": "The Met 84364 (Frock coat, ca. 1840, wool, C.I.38.23.39). Replaces the tweed case: no public-domain tweed garment was found.",
+      "fixture": {
+        "source_image": "source/met_84364_0.jpg",
+        "swatch_box": [
+          380,
+          1950,
+          320,
+          500
+        ],
+        "garment_box": [
+          175,
+          475,
+          1315,
+          2325
+        ]
+      },
+      "scale_note": "",
+      "autocheck": false,
+      "notes": "Shown on a hanger with the lining visible at the neck. Line drawing traced by the image model from the ground-truth photo (synthetic).",
+      "inputs": [
+        "inputs/line_drawing.png",
+        "inputs/fabric.jpg"
+      ],
+      "ground_truth": [
+        "ground_truth/photo.jpg"
+      ]
     },
     {
       "id": "C06",
@@ -114,10 +218,13 @@
     {
       "id": "C09",
       "task": "T5",
-      "item": "shawl or bordered garment",
-      "material": "placement print / border / embroidery",
-      "status": "planned",
-      "source": "Met q=shawl / q=embroidered; Cooper Hewitt textile motifs"
+      "item": "girl's dress",
+      "material": "two prints placed by zone: stripe-and-sprig front panel, red floral side panels and hem border",
+      "status": "sourcing",
+      "source": "The Met 159521 (Dress, ca. 1850, cotton, 2009.300.935)",
+      "fixture": {
+        "source_image": "source/met_159521_0.jpg"
+      }
     },
     {
       "id": "C10",

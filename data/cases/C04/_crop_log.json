@@ -1,0 +1,40 @@
+{
+  "case": "C04",
+  "source_image": "data/cases/C04/source/met_84229_0.jpg",
+  "made": "2026-11-24",
+  "files": {
+    "inputs/fabric.jpg": {
+      "crop": [
+        1450,
+        1620,
+        550,
+        170
+      ],
+      "colour_correction": "none (no reference card in source)"
+    },
+    "inputs/line_drawing_edges.png": {
+      "crop": [
+        140,
+        130,
+        2440,
+        1870
+      ],
+      "method": "median+bilateral blur, Canny 30/90, speck removal"
+    },
+    "inputs/line_drawing.png": {
+      "crop": [
+        140,
+        130,
+        2440,
+        1870
+      ],
+      "method": "traced by gpt-image-2.6-sunburst, quality=high",
+      "prompt": "Trace this garment photo into a clean flat technical drawing (fashion flat sketch), front view: thin uniform black lines on a pure white background. Draw the silhouette, every seam, the hem, collar and cuffs, buttons, pleats, trims and their exact positions as they appear in the photo. Do not draw the fabric's print, checks, stripes or texture, and do not shade or fill anything. Do not draw the mannequin or its stand. Do not add or remove any detail.",
+      "synthetic": true
+    },
+    "ground_truth/photo.jpg": {
+      "crop": null,
+      "method": "copy of source"
+    }
+  }
+}

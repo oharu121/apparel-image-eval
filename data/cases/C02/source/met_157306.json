@@ -1,0 +1,78 @@
+{
+  "objectID": 157306,
+  "isHighlight": false,
+  "accessionNumber": "2009.300.2477a, b",
+  "accessionYear": "2009",
+  "isPublicDomain": true,
+  "primaryImage": "https://images.metmuseum.org/CRDImages/ci/original/60.38.7a-b_front_CP4.jpg",
+  "primaryImageSmall": "https://images.metmuseum.org/CRDImages/ci/web-large/60.38.7a-b_front_CP4.jpg",
+  "additionalImages": [
+    "https://images.metmuseum.org/CRDImages/ci/original/60.38.7a-b_side_CP4.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/60.38.7a-b_back_CP4.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/60.38.7_front bw.JPG"
+  ],
+  "constituents": null,
+  "department": "Costume Institute",
+  "objectName": "Dress",
+  "title": "Dress",
+  "culture": "American",
+  "period": "",
+  "dynasty": "",
+  "reign": "",
+  "portfolio": "",
+  "artistRole": "",
+  "artistPrefix": "",
+  "artistDisplayName": "",
+  "artistDisplayBio": "",
+  "artistSuffix": "",
+  "artistAlphaSort": "",
+  "artistNationality": "",
+  "artistBeginDate": "",
+  "artistEndDate": "",
+  "artistGender": "",
+  "artistWikidata_URL": "",
+  "artistULAN_URL": "",
+  "objectDate": "1885–88",
+  "objectBeginDate": 1885,
+  "objectEndDate": 1888,
+  "medium": "cotton, silk",
+  "dimensions": "",
+  "measurements": [
+    {
+      "elementName": "Length at CB",
+      "elementDescription": "b",
+      "elementMeasurements": {
+        "Length": 113.03023
+      }
+    },
+    {
+      "elementName": "Length at CB",
+      "elementDescription": "a",
+      "elementMeasurements": {
+        "Length": 46.990093
+      }
+    }
+  ],
+  "creditLine": "Brooklyn Museum Costume Collection at The Metropolitan Museum of Art, Gift of the Brooklyn Museum, 2009; Gift of H. Dunscombe Colt, 1960",
+  "geographyType": "",
+  "city": "",
+  "state": "",
+  "county": "",
+  "country": "",
+  "region": "",
+  "subregion": "",
+  "locale": "",
+  "locus": "",
+  "excavation": "",
+  "river": "",
+  "classification": "",
+  "rightsAndReproduction": "",
+  "linkResource": "",
+  "metadataDate": "2025-03-06T04:54:30Z",
+  "repository": "Metropolitan Museum of Art, New York, NY",
+  "objectURL": "https://www.metmuseum.org/art/collection/search/157306",
+  "tags": null,
+  "objectWikidata_URL": "https://www.wikidata.org/wiki/Q100379771",
+  "isTimelineWork": false,
+  "GalleryNumber": ""
+}

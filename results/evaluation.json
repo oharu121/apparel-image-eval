@@ -1,19 +1,61 @@
 {
   "reviewer": "Claude (claude-opus-5-5), reading each output beside its inputs and the ground truth",
   "summary": [
-    "Shape from the drawing is reproduced well: jacket, pleated skirt, flared sleeves, collar, jabot, cuffs and bloomers all follow the line drawing, and every velvet lattice trim lands where it was drawn.",
-    "The fabric is recognisably the swatch's: same red ground, navy and green bands, cream and yellow overchecks, and a visible wool twill. Colour difference against the swatch is ΔE 2.5-3.2.",
-    "Pattern scale runs slightly large: 6.0-7.3 repeats across the garment against 8.0 on the real suit, so the plaid is drawn about 10-25% too big.",
-    "Where the drawing and swatch say nothing, the text decides: the case description wrongly said white bloomers, and all three samples made them white although the real ones are plaid. An error in the description goes straight into every image.",
-    "The three samples are nearly identical in layout and differ mainly in plaid scale, so one sample would have given the same verdict here.",
-    "Cost was $0.054 per image at medium quality, 1024x1536, in 23-28 seconds."
+    "Shape is the strongest result. In all four cases (C02-C05) every sample follows the line drawing's silhouette and construction: collars, lapels, buttons, drapes, pleats and trims land where they are drawn. Median construction score is 4-5.",
+    "Colour is reliable when it comes from the swatch: ΔE 2.6-3.9 against the swatch for the plaid and the stripe, and matching L* for the near-black wool.",
+    "Pattern scale is the main failure. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt.",
+    "Colour given only in text is unreliable. The knit's gold motifs came out gold in one sample of three, and a wrong word in the description (white bloomers) went into every sample.",
+    "Where the drawing is silent, the model chooses: stripe direction on sleeves and bodice, and pleats in a skirt that has none. A drawing that leaves something out is not a neutral input.",
+    "The swatch is copied literally, defects included: stains on the stripe swatch reappeared on one output's skirt.",
+    "Cost was $0.050-0.054 per image at medium quality, 1024x1536, in 16-28 seconds, plus about $0.05 per case for a traced line drawing."
   ],
   "cases": {
+    "C02": {
+      "worked": [
+        "Silhouette follows the drawing: crossover bodice, belt, asymmetric draped overskirt, knife-pleated underskirt, stand collar, puffed sleeve heads and the purple bow at the neck.",
+        "Stripe direction follows the construction in the skirt: the stripes curve with the drape on the overskirt and run straight and horizontal on the underskirt, as on the real dress.",
+        "Navy and cream match the swatch (ΔE 3.0-3.9) and the silk-cotton reads with the right low sheen."
+      ],
+      "issues": [
+        "Stripes are about twice as wide as the real ones: 0.49-0.62 of the real dress's stripe count down the underskirt.",
+        "Sleeves and bodice front have horizontal stripes; on the real dress they run along the sleeve and diagonally across the crossover. The drawing gives no stripe direction there, so the model chose one.",
+        "Sample 1 copies the swatch's brown stains onto the underskirt. The model treats marks on the swatch as part of the fabric, so swatches have to be clean."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C02/A_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 2,
+          "colour": 4,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 2
+        },
+        "results/gpt-image-2.6-sunburst/C02/A_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 3,
+          "colour": 4,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 3
+        },
+        "results/gpt-image-2.6-sunburst/C02/A_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 2,
+          "colour": 4,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 3
+        }
+      }
+    },
     "C03": {
       "worked": [
         "Silhouette and construction follow the drawing closely: cropped jacket with waistband and two buttons, knife-pleated skirt, three-quarter sleeves over lace cuffs, double collar and ruffled jabot.",
         "All nine velvet lattice trims are placed as drawn (two on the chest, two on the sleeves, five on the skirt), black and raised as described.",
-        "The plaid carries the swatch's colour set and structure, including the pinkish slub stripes, and reads as wool twill. ΔE against the swatch is 2.5-3.2.",
+        "The plaid carries the swatch's colour set and structure, including the pinkish slub stripes, and reads as wool twill. ΔE against the swatch is 2.6-3.3.",
         "Plaid is matched across the centre front of the jacket and runs continuously through the pleats."
       ],
       "issues": [
@@ -23,9 +65,115 @@
         "Blouse and lace are bright white where the original is aged cream. The prompt asked for a product photo of a new garment, so this is expected."
       ],
       "scores": {
-        "results/gpt-image-2.6-sunburst/C03/A_r1_s1.png": {"silhouette": 4, "fabric_pattern": 4, "pattern_scale": 4, "colour": 4, "texture": 4, "construction": 5, "usable_for_planning": 4},
-        "results/gpt-image-2.6-sunburst/C03/A_r1_s2.png": {"silhouette": 4, "fabric_pattern": 4, "pattern_scale": 3, "colour": 4, "texture": 4, "construction": 5, "usable_for_planning": 4},
-        "results/gpt-image-2.6-sunburst/C03/A_r1_s3.png": {"silhouette": 4, "fabric_pattern": 4, "pattern_scale": 4, "colour": 4, "texture": 4, "construction": 5, "usable_for_planning": 4}
+        "results/gpt-image-2.6-sunburst/C03/A_r1_s1.png": {
+          "silhouette": 4,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C03/A_r1_s2.png": {
+          "silhouette": 4,
+          "fabric_pattern": 4,
+          "pattern_scale": 3,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C03/A_r1_s3.png": {
+          "silhouette": 4,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        }
+      }
+    },
+    "C04": {
+      "worked": [
+        "Shape and layout follow the traced drawing: stand collar, centre-front knot buttons, two columns of motifs, the band across the lower body, and ribbed cuffs and hem.",
+        "The plain areas read as knit, not woven, with a visible stitch texture in the swatch's green.",
+        "Sample 1 renders the motifs as gold colourwork, close to the original."
+      ],
+      "issues": [
+        "Samples 2 and 3 render the motifs in green relief, as if embossed or corded, although the description says gold. Only the lower band stays gold. Text that is the only source for a colour was followed in one sample of three.",
+        "Motifs come out as raised surface decoration rather than colour knitted into the fabric.",
+        "The green is flatter and more saturated than the mottled original. That is expected for a new garment, so it is not scored down.",
+        "The boxy body and straight hem come from the traced drawing, not from the model; the real hem is V-shaped."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C04/A_r1_s1.png": {
+          "silhouette": 4,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 4,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C04/A_r1_s2.png": {
+          "silhouette": 4,
+          "fabric_pattern": 2,
+          "pattern_scale": 4,
+          "colour": 3,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 3
+        },
+        "results/gpt-image-2.6-sunburst/C04/A_r1_s3.png": {
+          "silhouette": 4,
+          "fabric_pattern": 2,
+          "pattern_scale": 4,
+          "colour": 3,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 3
+        }
+      }
+    },
+    "C05": {
+      "worked": [
+        "Construction is reproduced exactly in all three samples: notched lapels with slash buttonholes, double-breasted fastening with six covered buttons, waist seam and full skirt.",
+        "Colour matches: swatch, real coat and outputs are all neutral near-black (median L* 11.2, 14.1 and 12.0-13.5).",
+        "The three samples are nearly interchangeable, the lowest variance of any case."
+      ],
+      "issues": [
+        "The skirt is drawn as regular pressed pleats; the real skirt flares softly from the waist seam without pleats.",
+        "The wool's fine texture is not visible, but the swatch barely shows it either, so this case tests dark colour rather than texture."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C05/A_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 5,
+          "texture": 3,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C05/A_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 5,
+          "texture": 3,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C05/A_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 5,
+          "texture": 3,
+          "construction": 5,
+          "usable_for_planning": 4
+        }
       }
     }
   }
