@@ -3,7 +3,8 @@
     "Never send ground_truth/ to the model.",
     "Inputs are CC0 / public domain only; every file has a row in data/SOURCES.csv.",
     "Round 1 uses prompt_template unchanged for every case; prompt fixes go in round 2 and are logged as such.",
-    "Generate 3 samples per case x model x variant. The API has no seed, so samples are independent draws."
+    "Generate 3 samples per case x model x variant. The API has no seed, so samples are independent draws.",
+    "Round 2 changes only the fields named in a case's \"round2\" block; the template and every other input stay as in round 1."
   ],
   "prompt_template": {
     "T1": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric. Create a realistic e-commerce product photo of this exact garment made from this exact fabric: keep the silhouette and every construction detail from the drawing, and reproduce the fabric's colours, pattern and texture from the swatch. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add trims, prints or details that are not in the drawing.",
@@ -88,7 +89,11 @@
       ],
       "ground_truth": [
         "ground_truth/photo.jpg"
-      ]
+      ],
+      "round2": {
+        "scale_note": "The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it.",
+        "why": "Round 1 drew the stripes about twice too wide with no scale note."
+      }
     },
     {
       "id": "C03",
@@ -127,7 +132,11 @@
         "basis": "estimated from the photo: skirt ~1400px tall, vertical repeat ~280px; the Met record has no dimensions"
       },
       "autocheck": true,
-      "notes": "Line drawing traced by the image model from the ground-truth photo (synthetic). Swatch crop has one pleat fold down the middle that shifts the pattern; no flat area holds a full repeat. Round 1 item text wrongly says white bloomers; the bloomers in the ground truth are the plaid fabric."
+      "notes": "Line drawing traced by the image model from the ground-truth photo (synthetic). Swatch crop has one pleat fold down the middle that shifts the pattern; no flat area holds a full repeat. Round 1 item text wrongly says white bloomers; the bloomers in the ground truth are the plaid fabric.",
+      "round2": {
+        "scale_note": "The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem.",
+        "why": "Round 1 drew the plaid 10-25% too large with a qualitative scale note."
+      }
     },
     {
       "id": "C04",

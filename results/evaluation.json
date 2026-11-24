@@ -4,7 +4,7 @@
     "Shape is the strongest result. In all ten cases the line drawing's or base photo's silhouette and construction are kept: collars, lapels, buttons, smocking, drapes, pleats, trims and puff sleeves land where they are drawn. Median construction score is 4-5.",
     "Editing a photo works better than building from a drawing. Re-fabricating the coat (C06) and recolouring the striped dress (C08) kept every detail of the original, with the lowest colour error of any case (ΔE 1.7-2.2) and a stripe count that did not change.",
     "Colour is reliable when it comes from an image: ΔE 1.7-3.9 against the swatch in most cases. Colour given only in text is not. The knit's gold motifs came out gold in one sample of three, a wrong word in the description (white bloomers) went into every sample, and a requested hex landed about ΔE 8 away.",
-    "Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt.",
+    "Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt. Stating the size as a number in round 2 moved the scale but did not set it: the stripe overshot to 1.5-1.9 times the real count (section 5).",
     "Material transfers unevenly. Twill, knit stitch and velvet pile came through; the satin's sheen did not, and the satin dress came out matte.",
     "Placement by text works. Two prints were put in the right zones (C09) although the drawing does not mark the zones.",
     "A colourway set is only as consistent as its swatches. Four swatches cut from different parts of one large repeat produced four different motifs on one consistent coat (C07).",
@@ -494,6 +494,90 @@
           "texture": 5,
           "construction": 4,
           "usable_for_planning": 4
+        }
+      }
+    }
+  },
+  "round2": {
+    "question": "Does stating the pattern's size as a number in the prompt fix the scale errors of round 1?",
+    "change": "Only the scale note changed, filled from each case's \"round2\" block in data/manifest.json. Template, inputs, model and settings are as in round 1.",
+    "summary": [
+      "No. A number moves the scale but does not set it. The stripe went from about half the real stripe count to 1.5-1.9 times it, overshooting the other way; the plaid's spread widened from 0.75-0.91 to 0.64-1.19 of the real scale with the same average.",
+      "Part of the stripe overshoot is the instruction's: \"about 40 navy stripes from collar to hem\" assumes horizontal stripes throughout, and the bodice's run diagonally. Even so, the model treats a count as a rough direction rather than a measurement.",
+      "Pattern scale needs a non-text control, such as a swatch that shows a known fraction of the garment, or compositing the swatch onto the garment at true scale before generation.",
+      "C07's planned fix, re-cutting the four colourway swatches at the same point in the repeat, could not be done: every strip on the sample-book page shows a different fragment of the design, and no window is shared by four of them."
+    ],
+    "cases": {
+      "C02": {
+        "note": "The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it.",
+        "observations": [
+          "Stripes are now visibly finer than the real dress's: 1.5-1.9 times the real count down the underskirt, against 0.49-0.62 in round 1.",
+          "The swatch's stains no longer appear, but with three samples that may be chance."
+        ],
+        "scores": {
+          "results/gpt-image-2.6-sunburst/C02/A_r2_s1.png": {
+            "silhouette": 5,
+            "fabric_pattern": 4,
+            "pattern_scale": 2,
+            "colour": 4,
+            "texture": 4,
+            "construction": 4,
+            "usable_for_planning": 3
+          },
+          "results/gpt-image-2.6-sunburst/C02/A_r2_s2.png": {
+            "silhouette": 5,
+            "fabric_pattern": 4,
+            "pattern_scale": 2,
+            "colour": 4,
+            "texture": 4,
+            "construction": 4,
+            "usable_for_planning": 3
+          },
+          "results/gpt-image-2.6-sunburst/C02/A_r2_s3.png": {
+            "silhouette": 5,
+            "fabric_pattern": 4,
+            "pattern_scale": 2,
+            "colour": 4,
+            "texture": 4,
+            "construction": 4,
+            "usable_for_planning": 3
+          }
+        }
+      },
+      "C03": {
+        "note": "The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem.",
+        "observations": [
+          "Scale is no closer: 0.64-1.19 of the real repeat count, against 0.75-0.91 in round 1, so the samples now disagree more with each other.",
+          "Everything else is as in round 1."
+        ],
+        "scores": {
+          "results/gpt-image-2.6-sunburst/C03/A_r2_s1.png": {
+            "silhouette": 4,
+            "fabric_pattern": 4,
+            "pattern_scale": 3,
+            "colour": 4,
+            "texture": 4,
+            "construction": 5,
+            "usable_for_planning": 4
+          },
+          "results/gpt-image-2.6-sunburst/C03/A_r2_s2.png": {
+            "silhouette": 4,
+            "fabric_pattern": 4,
+            "pattern_scale": 3,
+            "colour": 4,
+            "texture": 4,
+            "construction": 5,
+            "usable_for_planning": 4
+          },
+          "results/gpt-image-2.6-sunburst/C03/A_r2_s3.png": {
+            "silhouette": 4,
+            "fabric_pattern": 4,
+            "pattern_scale": 4,
+            "colour": 4,
+            "texture": 4,
+            "construction": 5,
+            "usable_for_planning": 4
+          }
         }
       }
     }

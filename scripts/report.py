@@ -140,7 +140,7 @@ def main():
         d = case_dir(c["id"])
         label = lambda p: "Input: " + p.split("/")[-1].split(".")[0].replace("_", " ")
         out_tile = lambda p: (p, f"{p.parent.parent.name.replace('gpt-image-', '')} {p.stem}", "output", None)
-        outs = sorted(RESULTS.glob(f"*/{c['id']}/*.png"))
+        outs = sorted(p for p in RESULTS.glob(f"*/{c['id']}/*.png") if "_r1_" in p.stem)
         if c.get("colourways"):  # one row per colourway: shared inputs, that swatch, its samples
             shared = [p for p in c["inputs"] if p != c["inputs"][-1]]
             rows = []
@@ -159,7 +159,7 @@ def main():
         L += [f"### {c['id']} · {c['task']} · {c['material']}", "", f"![{c['id']}]({fig})", ""]
         L += ["**What worked**", ""] + [f"- {s}" for s in e["worked"]] + [""]
         L += ["**Issues**", ""] + [f"- {s}" for s in e["issues"]] + [""]
-        rows = [r for r in auto if r["case"] == c["id"]]
+        rows = [r for r in auto if r["case"] == c["id"] and "_r2_" not in r["file"]]
         if rows:
             L += [f"| Image | ΔE mean | ΔE max | Repeats {rows[0]['repeat_axis']} | vs ground truth |", "|---|---|---|---|---|"]
             for r in rows:
@@ -180,7 +180,32 @@ def main():
             L.append("| **median** | " + " | ".join(str(statistics.median(med(a))) if med(a) else "n/a" for a in AXES) + " |")
             L += [""]
 
-    L += ["## 5. Cost and latency", "",
+    r2 = ev.get("round2")
+    if r2:
+        L += ["## 5. Round 2: stating the scale as a number", "", f"**Question.** {r2['question']}", "", r2["change"], ""]
+        L += [f"- {s}" for s in r2["summary"]] + [""]
+        for cid, rc in r2["cases"].items():
+            c = next(x for x in m["cases"] if x["id"] == cid)
+            d = case_dir(cid)
+            r1 = sorted(RESULTS.glob(f"*/{cid}/A_r1_s1.png"))
+            r2o = sorted(RESULTS.glob(f"*/{cid}/A_r2_*.png"))
+            tiles = [(p, "Round 1 " + p.stem, "output", None) for p in r1] + [(p, "Round 2 " + p.stem, "output", None) for p in r2o]
+            tiles += [(d / p, "Ground truth", "truth", (c.get("fixture") or {}).get("garment_box")) for p in c["ground_truth"]]
+            fig = strip(f"{cid}_r2", tiles)
+            L += [f"### {cid} · {c['material']}", "", f"Round 2 scale note: *{rc['note']}*", "", f"![{cid} round 2]({fig})", ""]
+            L += [f"- {s}" for s in rc["observations"]] + [""]
+            rows = [r for r in auto if r["case"] == cid]
+            if rows:
+                L += [f"| Image | ΔE mean | Repeats {rows[0]['repeat_axis']} | vs ground truth |", "|---|---|---|---|"]
+                L += [f"| {r['file'].split('/')[-1]} | {r['dE_mean']} | {r['repeats']} | {r['repeats_vs_truth']} |" for r in rows]
+                L += [""]
+            sc = rc.get("scores", {})
+            if sc:
+                L += ["| Image | " + " | ".join(a.replace("_", " ") for a in AXES) + " |", "|---" * (len(AXES) + 1) + "|"]
+                L += [f"| {f.split('/')[-1]} | " + " | ".join(str(s[a]) for a in AXES) + " |" for f, s in sc.items()]
+                L += [""]
+
+    L += [f"## {6 if r2 else 5}. Cost and latency", "",
           "Cost per call is computed from the response's `usage` tokens at standard-tier prices "
           "($5 / 1M text input, $8 / 1M image input, $30 / 1M image output).", "",
           "| Step | Model | Quality, size | Calls | Mean cost | Mean latency | Total |", "|---|---|---|---|---|---|---|"]

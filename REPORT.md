@@ -7,7 +7,7 @@ Cases evaluated: C01, C02, C03, C04, C05, C06, C07, C08, C09, C10 of 10 planned.
 - Shape is the strongest result. In all ten cases the line drawing's or base photo's silhouette and construction are kept: collars, lapels, buttons, smocking, drapes, pleats, trims and puff sleeves land where they are drawn. Median construction score is 4-5.
 - Editing a photo works better than building from a drawing. Re-fabricating the coat (C06) and recolouring the striped dress (C08) kept every detail of the original, with the lowest colour error of any case (ΔE 1.7-2.2) and a stripe count that did not change.
 - Colour is reliable when it comes from an image: ΔE 1.7-3.9 against the swatch in most cases. Colour given only in text is not. The knit's gold motifs came out gold in one sample of three, a wrong word in the description (white bloomers) went into every sample, and a requested hex landed about ΔE 8 away.
-- Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt.
+- Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt. Stating the size as a number in round 2 moved the scale but did not set it: the stripe overshot to 1.5-1.9 times the real count (section 5).
 - Material transfers unevenly. Twill, knit stitch and velvet pile came through; the satin's sheen did not, and the satin dress came out matte.
 - Placement by text works. Two prints were put in the right zones (C09) although the drawing does not mark the zones.
 - A colourway set is only as consistent as its swatches. Four swatches cut from different parts of one large repeat produced four different motifs on one consistent coat (C07).
@@ -342,7 +342,68 @@ Shape IoU compares silhouettes cropped to their own bounding boxes; two unrelate
 | A_r1_s3.png | 5 | 4 | n/a | 3 | 5 | 4 | 4 |
 | **median** | 5 | 4 | n/a | 3 | 5 | 4 | 4 |
 
-## 5. Cost and latency
+## 5. Round 2: stating the scale as a number
+
+**Question.** Does stating the pattern's size as a number in the prompt fix the scale errors of round 1?
+
+Only the scale note changed, filled from each case's "round2" block in data/manifest.json. Template, inputs, model and settings are as in round 1.
+
+- No. A number moves the scale but does not set it. The stripe went from about half the real stripe count to 1.5-1.9 times it, overshooting the other way; the plaid's spread widened from 0.75-0.91 to 0.64-1.19 of the real scale with the same average.
+- Part of the stripe overshoot is the instruction's: "about 40 navy stripes from collar to hem" assumes horizontal stripes throughout, and the bodice's run diagonally. Even so, the model treats a count as a rough direction rather than a measurement.
+- Pattern scale needs a non-text control, such as a swatch that shows a known fraction of the garment, or compositing the swatch onto the garment at true scale before generation.
+- C07's planned fix, re-cutting the four colourway swatches at the same point in the repeat, could not be done: every strip on the sample-book page shows a different fragment of the design, and no window is shared by four of them.
+
+### C02 · stripe
+
+Round 2 scale note: *The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it.*
+
+![C02 round 2](report/figures/C02_r2.jpg)
+
+- Stripes are now visibly finer than the real dress's: 1.5-1.9 times the real count down the underskirt, against 0.49-0.62 in round 1.
+- The swatch's stains no longer appear, but with three samples that may be chance.
+
+| Image | ΔE mean | Repeats down | vs ground truth |
+|---|---|---|---|
+| photo.jpg | 1.4 | 10.4 | 1.0 |
+| A_r1_s1.png | 3.0 | 5.3 | 0.51 |
+| A_r1_s2.png | 3.9 | 6.4 | 0.62 |
+| A_r1_s3.png | 3.3 | 5.1 | 0.49 |
+| A_r2_s1.png | 3.6 | 15.8 | 1.52 |
+| A_r2_s2.png | 4.7 | 19.9 | 1.91 |
+| A_r2_s3.png | 3.4 | 16.4 | 1.58 |
+
+| Image | silhouette | fabric pattern | pattern scale | colour | texture | construction | usable for planning |
+|---|---|---|---|---|---|---|---|
+| A_r2_s1.png | 5 | 4 | 2 | 4 | 4 | 4 | 3 |
+| A_r2_s2.png | 5 | 4 | 2 | 4 | 4 | 4 | 3 |
+| A_r2_s3.png | 5 | 4 | 2 | 4 | 4 | 4 | 3 |
+
+### C03 · check / plaid
+
+Round 2 scale note: *The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem.*
+
+![C03 round 2](report/figures/C03_r2.jpg)
+
+- Scale is no closer: 0.64-1.19 of the real repeat count, against 0.75-0.91 in round 1, so the samples now disagree more with each other.
+- Everything else is as in round 1.
+
+| Image | ΔE mean | Repeats across | vs ground truth |
+|---|---|---|---|
+| photo.jpg | 6.3 | 8.0 | 1.0 |
+| A_r1_s1.png | 3.3 | 7.3 | 0.91 |
+| A_r1_s2.png | 2.6 | 6.0 | 0.75 |
+| A_r1_s3.png | 3.1 | 7.1 | 0.89 |
+| A_r2_s1.png | 2.7 | 5.7 | 0.71 |
+| A_r2_s2.png | 3.5 | 5.1 | 0.64 |
+| A_r2_s3.png | 3.1 | 9.5 | 1.19 |
+
+| Image | silhouette | fabric pattern | pattern scale | colour | texture | construction | usable for planning |
+|---|---|---|---|---|---|---|---|
+| A_r2_s1.png | 4 | 4 | 3 | 4 | 4 | 5 | 4 |
+| A_r2_s2.png | 4 | 4 | 3 | 4 | 4 | 5 | 4 |
+| A_r2_s3.png | 4 | 4 | 4 | 4 | 4 | 5 | 4 |
+
+## 6. Cost and latency
 
 Cost per call is computed from the response's `usage` tokens at standard-tier prices ($5 / 1M text input, $8 / 1M image input, $30 / 1M image output).
 
@@ -350,5 +411,6 @@ Cost per call is computed from the response's `usage` tokens at standard-tier pr
 |---|---|---|---|---|---|---|
 | drawing trace | `gpt-image-2.6-sunburst` | high, 1024x1536 | 7 | $0.0524 | 31.8s | $0.366 |
 | variant A, round 1 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 39 | $0.0504 | 20.0s | $1.965 |
+| variant A, round 2 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 6 | $0.0523 | 20.8s | $0.314 |
 
-Total spent: **$2.332**. Per-call rows are in [results/log.csv](results/log.csv).
+Total spent: **$2.645**. Per-call rows are in [results/log.csv](results/log.csv).

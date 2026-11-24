@@ -3,7 +3,13 @@ C02,data/cases/C02/ground_truth/photo.jpg,1.4,7.7,down,38.0,10.4,ground_truth,1.
 C02,results/gpt-image-2.6-sunburst/C02/A_r1_s1.png,3.0,4.8,down,71.0,5.3,output,0.51
 C02,results/gpt-image-2.6-sunburst/C02/A_r1_s2.png,3.9,6.3,down,59.0,6.4,output,0.62
 C02,results/gpt-image-2.6-sunburst/C02/A_r1_s3.png,3.3,5.4,down,75.0,5.1,output,0.49
+C02,results/gpt-image-2.6-sunburst/C02/A_r2_s1.png,3.6,3.9,down,24.0,15.8,output,1.52
+C02,results/gpt-image-2.6-sunburst/C02/A_r2_s2.png,4.7,6.8,down,19.0,19.9,output,1.91
+C02,results/gpt-image-2.6-sunburst/C02/A_r2_s3.png,3.4,5.8,down,23.0,16.4,output,1.58
 C03,data/cases/C03/ground_truth/photo.jpg,6.3,16.0,across,320.0,8.0,ground_truth,1.0
 C03,results/gpt-image-2.6-sunburst/C03/A_r1_s1.png,3.3,9.4,across,134.0,7.3,output,0.91
 C03,results/gpt-image-2.6-sunburst/C03/A_r1_s2.png,2.6,7.4,across,164.0,6.0,output,0.75
 C03,results/gpt-image-2.6-sunburst/C03/A_r1_s3.png,3.1,8.3,across,137.0,7.1,output,0.89
+C03,results/gpt-image-2.6-sunburst/C03/A_r2_s1.png,2.7,7.4,across,172.0,5.7,output,0.71
+C03,results/gpt-image-2.6-sunburst/C03/A_r2_s2.png,3.5,7.8,across,191.0,5.1,output,0.64
+C03,results/gpt-image-2.6-sunburst/C03/A_r2_s3.png,3.1,6.8,across,103.0,9.5,output,1.19
