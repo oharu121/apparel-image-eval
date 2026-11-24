@@ -1,12 +1,13 @@
 # Apparel image eval: results
 
-Cases evaluated: C02, C03, C04, C05 of 10 planned. Models: `gpt-image-2.6-sunburst`. Reviewer: Claude (claude-opus-5-5), reading each output beside its inputs and the ground truth.
+Cases evaluated: C01, C02, C03, C04, C05 of 10 planned. Models: `gpt-image-2.6-sunburst`. Reviewer: Claude (claude-opus-5-5), reading each output beside its inputs and the ground truth.
 
 ## 1. Summary
 
-- Shape is the strongest result. In all four cases (C02-C05) every sample follows the line drawing's silhouette and construction: collars, lapels, buttons, drapes, pleats and trims land where they are drawn. Median construction score is 4-5.
-- Colour is reliable when it comes from the swatch: ΔE 2.6-3.9 against the swatch for the plaid and the stripe, and matching L* for the near-black wool.
+- Shape is the strongest result. In all five cases every sample follows the line drawing's silhouette and construction: collars, lapels, buttons, smocking, drapes, pleats and trims land where they are drawn. Median construction score is 4-5.
+- Colour is reliable when it comes from the swatch: ΔE 2.1-3.9 against the swatch for the satin, the plaid and the stripe, and matching L* for the near-black wool.
 - Pattern scale is the main failure. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt.
+- Material character transfers only when the swatch shows it plainly. The plaid's twill and the knit's stitch came through; the satin's sheen did not, and the satin dress came out matte.
 - Colour given only in text is unreliable. The knit's gold motifs came out gold in one sample of three, and a wrong word in the description (white bloomers) went into every sample.
 - Where the drawing is silent, the model chooses: stripe direction on sleeves and bodice, and pleats in a skirt that has none. A drawing that leaves something out is not a neutral input.
 - The swatch is copied literally, defects included: stains on the stripe swatch reappeared on one output's skirt.
@@ -18,6 +19,7 @@ Each case starts from a public-domain museum photo of a real garment. The model 
 
 | Case | Task | Garment | Fabric | Ground truth | Source |
 |---|---|---|---|---|---|
+| C01 | T1 | girl's dress with a smocked and pin-tucked yoke, long sleeves with lace cuffs, a draped sash at the hip, petal-cut tiers and lace flounces at the hem, with satin ribbon bows, all in the swatch fabric with cream lace | plain satin | ground_truth/photo.jpg | The Met 157319 (Dress, ca. 1885, silk/cotton, 2009.300.2489a, b) |
 | C02 | T1 | woman's two-piece day dress: bodice with a crossover draped front and long sleeves, waistband, draped overskirt and pleated underskirt, all in the swatch fabric, with a small purple silk bow at the neck | stripe | ground_truth/photo.jpg | The Met 157306 (Dress, 1885-88, cotton/silk, 2009.300.2477a, b) |
 | C03 | T1 | child's two-piece suit: jacket and pleated skirt in the swatch fabric with black velvet ribbon lattice trims, worn over a white cotton blouse with eyelet lace collar, jabot and cuffs, and white bloomers | check / plaid | ground_truth/photo.jpg | The Met 159177 (Suit, ca. 1860, wool/cotton/silk, 2009.300.625a-c). The same photo also shows blouse 159178 (28.220), also public domain. |
 | C04 | T1 | short-sleeved knitted jacket with a stand collar, centre-front button closure, ribbed cuffs and hem, and gold patterned bands where drawn, in the swatch's knit | knit | ground_truth/photo.jpg | The Met 84229 (Sweater, late 17th century, silk, 14.134.18) |
@@ -36,10 +38,11 @@ Licences, authors and derivations for every file are in [data/SOURCES.csv](data/
 | Samples | 3 per case x model x variant. The API has no seed, so samples are independent draws |
 | Variant A | line drawing + fabric swatch → product photo |
 | Auto-checks | CIEDE2000 between the swatch's 4 dominant colours and the garment's; pattern repeat count by autocorrelation along the case's repeat axis, compared with the ground truth's |
-| Scoring | 1-5 on silhouette, fabric_pattern, pattern_scale, colour, texture, construction, usable_for_planning |
+| Scoring | 1-5 on silhouette, fabric_pattern, pattern_scale, colour, texture, construction, usable_for_planning; pattern_scale is n/a for plain fabrics |
 
 Input notes that affect the results:
 
+- **C01**: Plain ivory silk satin; the only flat area is the upper sleeve, so the swatch is small. Construction is heavy (smocking, lace, petal tiers). Line drawing traced by the image model from the ground-truth photo (synthetic).
 - **C02**: Stripes run on the bias in the bodice and overskirt and horizontally on the underskirt; the swatch is cut from the underskirt. Line drawing traced by the image model from the ground-truth photo (synthetic).
 - **C03**: Line drawing traced by the image model from the ground-truth photo (synthetic). Swatch crop has one pleat fold down the middle that shifts the pattern; no flat area holds a full repeat. Round 1 item text wrongly says white bloomers; the bloomers in the ground truth are the plaid fabric.
 - **C04**: Photographed flat. The swatch is the plain textured knit; the gold bands are described in text and drawn, not given as a swatch. Line drawing traced by the image model from the ground-truth photo (synthetic). The traced drawing straightens the real V-shaped front hem and makes the body boxier.
@@ -48,6 +51,28 @@ Input notes that affect the results:
 ## 4. Results by case
 
 Dashed grey frame = input, no frame = output, blue frame = ground truth.
+
+### C01 · T1 · plain satin
+
+![C01](report/figures/C01.jpg)
+
+**What worked**
+
+- Construction matches the drawing in every sample: ruffled stand collar, pin-tucked yoke, smocked band, ribbon bows at the neck, shoulder and cuffs, the hip sash with its rosette, petal-cut tiers and hem flounces.
+- Colour matches the swatch: median garment colour is ΔE 2.1-3.9 from it.
+
+**Issues**
+
+- The satin's sheen is lost. The dress body reads as a matte wool or brushed cotton while the ribbons stay glossy, so the model did not take the material from a small, low-contrast swatch.
+- The lace is drawn as self-fabric scallops (sample 1) or white eyelet (samples 2 and 3) instead of a separate cream lace, although the description names it.
+- The sash is drawn symmetrical and the skirt fuller than the original, where the sash crosses the hip on a diagonal.
+
+| Image | silhouette | fabric pattern | pattern scale | colour | texture | construction | usable for planning |
+|---|---|---|---|---|---|---|---|
+| A_r1_s1.png | 5 | 3 | n/a | 4 | 2 | 5 | 3 |
+| A_r1_s2.png | 5 | 3 | n/a | 4 | 2 | 5 | 3 |
+| A_r1_s3.png | 5 | 3 | n/a | 4 | 2 | 5 | 3 |
+| **median** | 5 | 3 | n/a | 4 | 2 | 5 | 3 |
 
 ### C02 · T1 · stripe
 
@@ -152,10 +177,10 @@ Dashed grey frame = input, no frame = output, blue frame = ground truth.
 
 | Image | silhouette | fabric pattern | pattern scale | colour | texture | construction | usable for planning |
 |---|---|---|---|---|---|---|---|
-| A_r1_s1.png | 5 | 4 | 4 | 5 | 3 | 5 | 4 |
-| A_r1_s2.png | 5 | 4 | 4 | 5 | 3 | 5 | 4 |
-| A_r1_s3.png | 5 | 4 | 4 | 5 | 3 | 5 | 4 |
-| **median** | 5 | 4 | 4 | 5 | 3 | 5 | 4 |
+| A_r1_s1.png | 5 | 4 | n/a | 5 | 3 | 5 | 4 |
+| A_r1_s2.png | 5 | 4 | n/a | 5 | 3 | 5 | 4 |
+| A_r1_s3.png | 5 | 4 | n/a | 5 | 3 | 5 | 4 |
+| **median** | 5 | 4 | n/a | 5 | 3 | 5 | 4 |
 
 ## 5. Cost and latency
 
@@ -163,7 +188,7 @@ Cost per call is computed from the response's `usage` tokens at standard-tier pr
 
 | Step | Model | Quality, size | Calls | Mean cost | Mean latency | Total |
 |---|---|---|---|---|---|---|
-| drawing trace | `gpt-image-2.6-sunburst` | high, 1024x1536 | 4 | $0.0527 | 32.6s | $0.211 |
-| variant A, round 1 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 12 | $0.0516 | 20.3s | $0.619 |
+| drawing trace | `gpt-image-2.6-sunburst` | high, 1024x1536 | 5 | $0.0525 | 32.7s | $0.263 |
+| variant A, round 1 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 15 | $0.0508 | 20.2s | $0.762 |
 
-Total spent: **$0.830**. Per-call rows are in [results/log.csv](results/log.csv).
+Total spent: **$1.025**. Per-call rows are in [results/log.csv](results/log.csv).

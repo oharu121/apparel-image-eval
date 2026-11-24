@@ -37,25 +37,34 @@ def get_json(url, params=None, tries=4):
 
 
 def obj(object_id):
+    """The object record, or None when the search index lists an ID the object endpoint 404s."""
+    r = requests.get(f"{API}/v1/objects/{object_id}", headers=UA, timeout=30)
+    if r.status_code == 404:
+        return None
     return get_json(f"{API}/v1/objects/{object_id}")
 
 
-def search(q, limit):
-    res = get_json(f"{API}/v1.1/search", {
-        "departmentId": COSTUME_DEPT, "hasImages": "true", "isPublicDomain": "true",
-        "q": q, "limit": limit,
-    })
+def search(q, limit, any_department=False):
+    params = {"hasImages": "true", "isPublicDomain": "true", "q": q, "limit": limit}
+    if not any_department:
+        params["departmentId"] = COSTUME_DEPT
+    res = get_json(f"{API}/v1.1/search", params)
     print(f"{res['total']} hits for {q!r}; checking first {len(res['objectIDs'])}")
     for oid in res["objectIDs"]:
         o = obj(oid)
-        pd = "PD " if o["isPublicDomain"] and o["primaryImage"] else "-- "
-        print(f"{pd}{oid:>7}  {o['objectDate'][:16]:16}  {o['title'][:40]:40}  "
+        if o is None:
+            print(f"--  {oid:>7}  (listed by search, 404 from the object endpoint)")
+            continue
+        pd ="PD " if o["isPublicDomain"] and o["primaryImage"] else "-- "
+        print(f"{pd}{oid:>7}  {o['department'][:20]:20}  {o['objectDate'][:16]:16}  {o['title'][:40]:40}  "
               f"+{len(o['additionalImages'])} imgs  {o['objectURL']}")
         time.sleep(0.3)
 
 
 def get(case_id, object_id, primary_only, image=None):
     o = obj(object_id)
+    if o is None:
+        sys.exit(f"object {object_id} not found")
     if not o["isPublicDomain"] or not o["primaryImage"]:
         sys.exit(f"object {object_id} is not public domain or has no image; refusing")
     d = case_dir(case_id) / "source"
@@ -96,13 +105,14 @@ def main():
     s = sub.add_parser("search")
     s.add_argument("q")
     s.add_argument("--limit", type=int, default=20)
+    s.add_argument("--any-department", action="store_true", help="search beyond the Costume Institute")
     g = sub.add_parser("get")
     g.add_argument("case")
     g.add_argument("object_id", type=int)
     g.add_argument("--primary-only", action="store_true", help="skip the additional views")
     g.add_argument("--image", help="only this view, by the filename the Met serves it under")
     a = ap.parse_args()
-    search(a.q, a.limit) if a.cmd == "search" else get(a.case, a.object_id, a.primary_only, a.image)
+    search(a.q, a.limit, a.any_department) if a.cmd == "search" else get(a.case, a.object_id, a.primary_only, a.image)
 
 
 if __name__ == "__main__":

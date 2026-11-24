@@ -114,7 +114,7 @@ def main():
           "| Samples | 3 per case x model x variant. The API has no seed, so samples are independent draws |",
           "| Variant A | line drawing + fabric swatch → product photo |",
           "| Auto-checks | CIEDE2000 between the swatch's 4 dominant colours and the garment's; pattern repeat count by autocorrelation along the case's repeat axis, compared with the ground truth's |",
-          "| Scoring | 1-5 on " + ", ".join(AXES) + " |", ""]
+          "| Scoring | 1-5 on " + ", ".join(AXES) + "; pattern_scale is n/a for plain fabrics |", ""]
     notes = [c for c in cases if c.get("notes")]
     if notes:
         L += ["Input notes that affect the results:", ""] + [f"- **{c['id']}**: {c['notes']}" for c in notes] + [""]
@@ -143,8 +143,9 @@ def main():
         if sc:
             L += ["| Image | " + " | ".join(a.replace("_", " ") for a in AXES) + " |", "|---" * (len(AXES) + 1) + "|"]
             for f, s in sc.items():
-                L.append(f"| {f.split('/')[-1]} | " + " | ".join(str(s[a]) for a in AXES) + " |")
-            L.append("| **median** | " + " | ".join(str(statistics.median(s[a] for s in sc.values())) for a in AXES) + " |")
+                L.append(f"| {f.split('/')[-1]} | " + " | ".join("n/a" if s[a] is None else str(s[a]) for a in AXES) + " |")
+            med = lambda a: [s[a] for s in sc.values() if s[a] is not None]
+            L.append("| **median** | " + " | ".join(str(statistics.median(med(a))) if med(a) else "n/a" for a in AXES) + " |")
             L += [""]
 
     L += ["## 5. Cost and latency", "",

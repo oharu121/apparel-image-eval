@@ -15,3 +15,7 @@ time,round,case,variant,sample,model,size,quality,latency_s,text_in_tokens,image
 2026-11-24 21:12:02,1,C05,A,1,gpt-image-2.6-sunburst,1024x1536,medium,19.8,156,2176,1132,0.0521,usage,results/gpt-image-2.6-sunburst/C05/A_r1_s1.png,
 2026-11-24 21:12:22,1,C05,A,2,gpt-image-2.6-sunburst,1024x1536,medium,19.0,156,2176,1132,0.0521,usage,results/gpt-image-2.6-sunburst/C05/A_r1_s2.png,
 2026-11-24 21:12:41,1,C05,A,3,gpt-image-2.6-sunburst,1024x1536,medium,16.9,156,2176,1132,0.0521,usage,results/gpt-image-2.6-sunburst/C05/A_r1_s3.png,
+2026-11-24 21:19:59,0,C01,trace,1,gpt-image-2.6-sunburst,1024x1536,high,33.2,114,1296,1372,0.0521,usage,data/cases/C01/inputs/line_drawing.png,
+2026-11-24 21:20:50,1,C01,A,1,gpt-image-2.6-sunburst,1024x1536,medium,20.9,178,1601,1132,0.0477,usage,results/gpt-image-2.6-sunburst/C01/A_r1_s1.png,
+2026-11-24 21:21:11,1,C01,A,2,gpt-image-2.6-sunburst,1024x1536,medium,21.0,178,1601,1132,0.0477,usage,results/gpt-image-2.6-sunburst/C01/A_r1_s2.png,
+2026-11-24 21:21:32,1,C01,A,3,gpt-image-2.6-sunburst,1024x1536,medium,17.9,178,1601,1132,0.0477,usage,results/gpt-image-2.6-sunburst/C01/A_r1_s3.png,
