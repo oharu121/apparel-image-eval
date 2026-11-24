@@ -1,0 +1,32 @@
+{
+  "reviewer": "Claude (claude-opus-5-5), reading each output beside its inputs and the ground truth",
+  "summary": [
+    "Shape from the drawing is reproduced well: jacket, pleated skirt, flared sleeves, collar, jabot, cuffs and bloomers all follow the line drawing, and every velvet lattice trim lands where it was drawn.",
+    "The fabric is recognisably the swatch's: same red ground, navy and green bands, cream and yellow overchecks, and a visible wool twill. Colour difference against the swatch is ΔE 2.5-3.2.",
+    "Pattern scale runs slightly large: 6.0-7.3 repeats across the garment against 8.0 on the real suit, so the plaid is drawn about 10-25% too big.",
+    "Where the drawing and swatch say nothing, the text decides: the case description wrongly said white bloomers, and all three samples made them white although the real ones are plaid. An error in the description goes straight into every image.",
+    "The three samples are nearly identical in layout and differ mainly in plaid scale, so one sample would have given the same verdict here.",
+    "Cost was $0.054 per image at medium quality, 1024x1536, in 23-28 seconds."
+  ],
+  "cases": {
+    "C03": {
+      "worked": [
+        "Silhouette and construction follow the drawing closely: cropped jacket with waistband and two buttons, knife-pleated skirt, three-quarter sleeves over lace cuffs, double collar and ruffled jabot.",
+        "All nine velvet lattice trims are placed as drawn (two on the chest, two on the sleeves, five on the skirt), black and raised as described.",
+        "The plaid carries the swatch's colour set and structure, including the pinkish slub stripes, and reads as wool twill. ΔE against the swatch is 2.5-3.2.",
+        "Plaid is matched across the centre front of the jacket and runs continuously through the pleats."
+      ],
+      "issues": [
+        "Plaid is drawn 10-25% too large (6.0-7.3 repeats across against 8.0 on the real suit). Sample 2 is the furthest off.",
+        "Pleats are stiff, evenly pressed and shorter than the real skirt's soft, irregular, fuller pleats.",
+        "Bloomers are white in every sample because the case description said so; the real bloomers are plaid. This is an error in the input text, not in the model.",
+        "Blouse and lace are bright white where the original is aged cream. The prompt asked for a product photo of a new garment, so this is expected."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C03/A_r1_s1.png": {"silhouette": 4, "fabric_pattern": 4, "pattern_scale": 4, "colour": 4, "texture": 4, "construction": 5, "usable_for_planning": 4},
+        "results/gpt-image-2.6-sunburst/C03/A_r1_s2.png": {"silhouette": 4, "fabric_pattern": 4, "pattern_scale": 3, "colour": 4, "texture": 4, "construction": 5, "usable_for_planning": 4},
+        "results/gpt-image-2.6-sunburst/C03/A_r1_s3.png": {"silhouette": 4, "fabric_pattern": 4, "pattern_scale": 4, "colour": 4, "texture": 4, "construction": 5, "usable_for_planning": 4}
+      }
+    }
+  }
+}

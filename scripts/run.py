@@ -31,7 +31,28 @@ LOG_FIELDS = ["time", "round", "case", "variant", "sample", "model", "size", "qu
               "cost_usd", "cost_source", "file", "error"]
 
 
-def estimate(size, quality, n_inputs):
+def observed():
+    """Highest logged cost per (model, size, quality), from calls billed by usage."""
+    seen = {}
+    logf = RESULTS / "log.csv"
+    if logf.exists():
+        with logf.open(newline="") as f:
+            for r in csv.DictReader(f):
+                if r["cost_source"] == "usage":
+                    k = (r["model"], r["size"], r["quality"])
+                    seen[k] = max(seen.get(k, 0.0), float(r["cost_usd"]))
+    return seen
+
+
+def estimate(size, quality, n_inputs, model=None, seen=None):
+    """Pre-call cost for the --max-cost guard.
+
+    Uses the highest cost already logged for this model, size and quality plus 20% headroom,
+    since input tokens vary with the inputs. Falls back to the output-token table plus a fixed
+    allowance per input image, which runs about 2x high.
+    """
+    if seen and (model, size, quality) in seen:
+        return seen[(model, size, quality)] * 1.2
     w, h = map(int, size.split("x"))
     out = OUT_TOKENS_1K[quality] * (w * h) / (1024 * 1024)
     return out * PRICE["image_out"] + n_inputs * EST_INPUT_USD_PER_IMAGE
@@ -78,7 +99,8 @@ def main():
     m = load_manifest()
     jobs = plan(m, a)
     todo = [j for j in jobs if not j["out"].exists()]
-    est = sum(estimate(a.size, a.quality, len(j["inputs"])) for j in todo)
+    seen = observed()
+    est = sum(estimate(a.size, a.quality, len(j["inputs"]), a.model, seen) for j in todo)
     print(f"{len(jobs)} jobs, {len(jobs) - len(todo)} already done, {len(todo)} to run, "
           f"est ${est:.2f} (budget ${a.max_cost:.2f})")
 
@@ -106,7 +128,7 @@ def main():
         if new:
             w.writeheader()
         for j in todo:
-            next_est = estimate(a.size, a.quality, len(j["inputs"]))
+            next_est = estimate(a.size, a.quality, len(j["inputs"]), a.model, seen)
             if spent + next_est > a.max_cost:
                 print(f"stop: spent ${spent:.3f}, next call est ${next_est:.3f} would exceed --max-cost")
                 break

@@ -1,7 +1,7 @@
 """Make a case's line drawing by asking the image model to trace the source photo.
 
-    uv run --env-file .env scripts/trace.py C03 --dry-run
-    uv run --env-file .env scripts/trace.py C03
+    uv run --env-file .env scripts/trace_drawing.py C03 --dry-run
+    uv run --env-file .env scripts/trace_drawing.py C03
 
 Used when edge detection cannot separate seams from the fabric's own pattern. The model sees the
 ground-truth photo while tracing, so the drawing is marked synthetic in SOURCES.csv and the
@@ -14,6 +14,7 @@ import argparse
 import base64
 import csv
 import io
+import json
 import os
 import sys
 import time
@@ -31,6 +32,14 @@ PROMPT = (
     "Do not draw the fabric's print, checks, stripes or texture, and do not shade or fill anything. "
     "Do not draw the mannequin or its stand. Do not add or remove any detail."
 )
+
+
+def record_trace(d, fx, a):
+    log_file = d / "_crop_log.json"
+    log = json.loads(log_file.read_text()) if log_file.exists() else {"files": {}}
+    log["files"]["inputs/line_drawing.png"] = {"crop": fx["garment_box"], "method": f"traced by {a.model}, quality={a.quality}",
+                                               "prompt": PROMPT, "synthetic": True}
+    log_file.write_text(json.dumps(log, indent=2) + "\n")
 
 
 def main():
@@ -97,6 +106,7 @@ def main():
                 "author": a.model, "title": "line drawing traced from source photo", "retrieved": today(),
                 "derived_from": src, "synthetic": "true",
                 "notes": f"traced by {a.model} quality={a.quality} from garment_box {fx['garment_box']}; model saw the ground-truth photo"})
+    record_trace(d, fx, a)
     note = "Line drawing traced by the image model from the ground-truth photo (synthetic)."
     if note not in c.get("notes", ""):
         c["notes"] = (c.get("notes", "") + " " + note).strip()

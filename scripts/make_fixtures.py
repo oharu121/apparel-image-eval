@@ -83,9 +83,22 @@ def main():
         cv2.imwrite(str(fn), sw, [cv2.IMWRITE_JPEG_QUALITY, 95])
     log["files"]["inputs/fabric.jpg"] = {"crop": fx["swatch_box"], "colour_correction": "none (no reference card in source)"}
 
+    # The edge drawing always goes to line_drawing_edges.png. It becomes line_drawing.png only
+    # when there is none yet, so a drawing made by trace_drawing.py or by hand is never overwritten.
     ld = line_drawing(crop(img, fx["garment_box"]))
-    cv2.imwrite(str(d / "inputs/line_drawing.png"), ld)
-    log["files"]["inputs/line_drawing.png"] = {"crop": fx["garment_box"], "method": "median+bilateral blur, Canny 30/90, speck removal"}
+    cv2.imwrite(str(d / "inputs/line_drawing_edges.png"), ld)
+    log["files"]["inputs/line_drawing_edges.png"] = {"crop": fx["garment_box"], "method": "median+bilateral blur, Canny 30/90, speck removal"}
+    drawing_is_edges = not (d / "inputs/line_drawing.png").exists()
+    if drawing_is_edges:
+        shutil.copy(d / "inputs/line_drawing_edges.png", d / "inputs/line_drawing.png")
+        log["files"]["inputs/line_drawing.png"] = {**log["files"]["inputs/line_drawing_edges.png"], "copy_of": "inputs/line_drawing_edges.png"}
+    else:
+        prev = d / "_crop_log.json"
+        if prev.exists():
+            old = json.loads(prev.read_text())["files"].get("inputs/line_drawing.png")
+            if old:
+                log["files"]["inputs/line_drawing.png"] = old
+        print("kept existing inputs/line_drawing.png")
 
     shutil.copy(src, d / "ground_truth/photo.jpg")
     log["files"]["ground_truth/photo.jpg"] = {"crop": None, "method": "copy of source"}
@@ -95,8 +108,11 @@ def main():
         parent = next((r for r in csv.DictReader(f) if r["file"] == rel(src)), None)
     if parent:
         base.update({k: parent[k] for k in ("source_url", "license", "author", "title", "object_date")})
-    for name, role in (("inputs/fabric.jpg", "input_fabric"), ("inputs/line_drawing.png", "input_drawing"),
-                       ("ground_truth/photo.jpg", "ground_truth")):
+    outputs = [("inputs/fabric.jpg", "input_fabric"), ("inputs/line_drawing_edges.png", "reference"),
+               ("ground_truth/photo.jpg", "ground_truth")]
+    if drawing_is_edges:
+        outputs.append(("inputs/line_drawing.png", "input_drawing"))
+    for name, role in outputs:
         add_source({**base, "file": rel(d / name), "role": role, "retrieved": today(),
                     "derived_from": rel(src), "notes": json.dumps(log["files"][name])})
         print("wrote", rel(d / name))

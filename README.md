@@ -33,15 +33,19 @@ data/
     _crop_log.json     crop box and method for every derived file
 scripts/
   fetch_met.py         search / download Met Open Access garments, checking public-domain status per object
-  make_fixtures.py     source photo → swatch, line drawing, ground truth
+  make_fixtures.py     source photo → swatch, edge-detection line drawing, ground truth
+  trace_drawing.py     line drawing traced by the image model, for garments edge detection cannot handle
   run.py               generation, with --dry-run, --max-cost and skip-if-exists
   autocheck.py         colour ΔE vs swatch and pattern repeat count, for patterned cases
   gallery.py           static HTML gallery with a blind scoring mode
+  report.py            REPORT.md and report/figures/ from the logs and results/evaluation.json
 results/
   <model>/<case>/<variant>_r<round>_s<n>.png
   log.csv              model, size, quality, latency, tokens and cost per call
   autocheck.csv
+  evaluation.json      per-case judgments: what worked, issues, 1-5 scores
 gallery/index.html
+REPORT.md              the write-up
 ```
 
 ## Rules
@@ -54,7 +58,8 @@ gallery/index.html
   in round 2 and are logged with `--round 2`.
 - Three samples per case × model × variant. The API has no seed parameter, so samples are
   independent draws, not reproducible runs.
-- The API key is read from `OPENAI_API_KEY` and never written to the repo.
+- The API key is read from `OPENAI_API_KEY`, kept in a gitignored `.env` and passed with
+  `uv run --env-file .env`.
 
 ## Running
 
@@ -65,22 +70,35 @@ uv run scripts/fetch_met.py get C03 <object id>
 # set case.fixture boxes in manifest.json, then check them:
 uv run scripts/make_fixtures.py C03 --preview
 uv run scripts/make_fixtures.py C03
+# if the edge drawing picks up the fabric's pattern or loses details:
+uv run --env-file .env scripts/trace_drawing.py C03
 # set case.status to "ready"
 uv run scripts/run.py --dry-run
-OPENAI_API_KEY=... uv run scripts/run.py --cases C03 --samples 1 --max-cost 0.5
+uv run --env-file .env scripts/run.py --cases C03 --max-cost 0.5
 uv run scripts/autocheck.py
 uv run scripts/gallery.py && open gallery/index.html
+# write the case's judgments into results/evaluation.json, then:
+uv run scripts/report.py
 ```
 
 ## Cost
 
 Standard-tier token prices, identical for both 2.6 models (checked 2026-11-24):
 $5 / 1M text input, $8 / 1M image input, $30 / 1M image output. `run.py` records the cost of
-each call from the response's `usage` field; the `--max-cost` guard uses a conservative
-pre-call estimate.
+each call from the response's `usage` field. The `--max-cost` guard estimates each call as the
+highest cost already logged for the same model, size and quality plus 20%, falling back to a
+token table that runs about 2x high.
 
 ## Scoring
 
 Each output is scored 1–5 on silhouette vs drawing, fabric/pattern fidelity, pattern scale,
 colour, material texture, construction details, and whether it is usable for a planning
 decision.
+
+## Auto-checks
+
+`autocheck.py` measures colour and horizontal pattern scale only. Vertical repeat is not
+measured: every column through a garment crosses hems, waistbands and trims, and that
+structure swamps the fabric's repeat. Results are reported against the ground truth's own
+measurement (`repeats_vs_truth`, 1.0 = same scale) rather than an absolute count, because
+museum records rarely give garment dimensions.
