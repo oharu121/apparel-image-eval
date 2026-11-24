@@ -4,7 +4,7 @@
     "Shape is the strongest result. In all ten cases the line drawing's or base photo's silhouette and construction are kept: collars, lapels, buttons, smocking, drapes, pleats, trims and puff sleeves land where they are drawn. Median construction score is 4-5.",
     "Editing a photo works better than building from a drawing. Re-fabricating the coat (C06) and recolouring the striped dress (C08) kept every detail of the original, with the lowest colour error of any case (ΔE 1.7-2.2) and a stripe count that did not change.",
     "Colour is reliable when it comes from an image: ΔE 1.7-3.9 against the swatch in most cases. Colour given only in text is not. The knit's gold motifs came out gold in one sample of three, a wrong word in the description (white bloomers) went into every sample, and a requested hex landed about ΔE 8 away.",
-    "Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt. Stating the size as a number in round 2 moved the scale but did not set it: the stripe overshot to 1.5-1.9 times the real count (section 5).",
+    "Pattern scale is the main failure of building from a drawing, and words do not fix it. The plaid is drawn 10-25% too large and the stripe about twice too wide; stating the size as a number (round 2) moved the stripe to 1.5-1.9 times the real count instead. Giving the scale as an image (round 3, the swatch pasted onto the drawing at true scale) brought the stripe to 0.85-0.93 and two of three plaid samples to 0.94-1.00 (sections 5 and 6).",
     "Material transfers unevenly. Twill, knit stitch and velvet pile came through; the satin's sheen did not, and the satin dress came out matte.",
     "Placement by text works. Two prints were put in the right zones (C09) although the drawing does not mark the zones.",
     "A colourway set is only as consistent as its swatches. Four swatches cut from different parts of one large repeat produced four different motifs on one consistent coat (C07).",
@@ -498,88 +498,183 @@
       }
     }
   },
-  "round2": {
-    "question": "Does stating the pattern's size as a number in the prompt fix the scale errors of round 1?",
-    "change": "Only the scale note changed, filled from each case's \"round2\" block in data/manifest.json. Template, inputs, model and settings are as in round 1.",
-    "summary": [
-      "No. A number moves the scale but does not set it. The stripe went from about half the real stripe count to 1.5-1.9 times it, overshooting the other way; the plaid's spread widened from 0.75-0.91 to 0.64-1.19 of the real scale with the same average.",
-      "Part of the stripe overshoot is the instruction's: \"about 40 navy stripes from collar to hem\" assumes horizontal stripes throughout, and the bodice's run diagonally. Even so, the model treats a count as a rough direction rather than a measurement.",
-      "Pattern scale needs a non-text control, such as a swatch that shows a known fraction of the garment, or compositing the swatch onto the garment at true scale before generation.",
-      "C07's planned fix, re-cutting the four colourway swatches at the same point in the repeat, could not be done: every strip on the sample-book page shows a different fragment of the design, and no window is shared by four of them."
-    ],
-    "cases": {
-      "C02": {
-        "note": "The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it.",
-        "observations": [
-          "Stripes are now visibly finer than the real dress's: 1.5-1.9 times the real count down the underskirt, against 0.49-0.62 in round 1.",
-          "The swatch's stains no longer appear, but with three samples that may be chance."
-        ],
-        "scores": {
-          "results/gpt-image-2.6-sunburst/C02/A_r2_s1.png": {
-            "silhouette": 5,
-            "fabric_pattern": 4,
-            "pattern_scale": 2,
-            "colour": 4,
-            "texture": 4,
-            "construction": 4,
-            "usable_for_planning": 3
+  "rounds": [
+    {
+      "question": "Does stating the pattern's size as a number in the prompt fix the scale errors of round 1?",
+      "change": "Only the scale note changed, filled from each case's \"round2\" block in data/manifest.json. Template, inputs, model and settings are as in round 1.",
+      "summary": [
+        "No. A number moves the scale but does not set it. The stripe went from about half the real stripe count to 1.5-1.9 times it, overshooting the other way; the plaid's spread widened from 0.75-0.91 to 0.64-1.19 of the real scale with the same average.",
+        "Part of the stripe overshoot is the instruction's: \"about 40 navy stripes from collar to hem\" assumes horizontal stripes throughout, and the bodice's run diagonally. Even so, the model treats a count as a rough direction rather than a measurement.",
+        "Pattern scale needs a non-text control, such as a swatch that shows a known fraction of the garment, or compositing the swatch onto the garment at true scale before generation.",
+        "C07's planned fix, re-cutting the four colourway swatches at the same point in the repeat, could not be done: every strip on the sample-book page shows a different fragment of the design, and no window is shared by four of them."
+      ],
+      "cases": {
+        "C02": {
+          "observations": [
+            "Stripes are now visibly finer than the real dress's: 1.5-1.9 times the real count down the underskirt, against 0.49-0.62 in round 1.",
+            "The swatch's stains no longer appear, but with three samples that may be chance."
+          ],
+          "scores": {
+            "results/gpt-image-2.6-sunburst/C02/A_r2_s1.png": {
+              "silhouette": 5,
+              "fabric_pattern": 4,
+              "pattern_scale": 2,
+              "colour": 4,
+              "texture": 4,
+              "construction": 4,
+              "usable_for_planning": 3
+            },
+            "results/gpt-image-2.6-sunburst/C02/A_r2_s2.png": {
+              "silhouette": 5,
+              "fabric_pattern": 4,
+              "pattern_scale": 2,
+              "colour": 4,
+              "texture": 4,
+              "construction": 4,
+              "usable_for_planning": 3
+            },
+            "results/gpt-image-2.6-sunburst/C02/A_r2_s3.png": {
+              "silhouette": 5,
+              "fabric_pattern": 4,
+              "pattern_scale": 2,
+              "colour": 4,
+              "texture": 4,
+              "construction": 4,
+              "usable_for_planning": 3
+            }
           },
-          "results/gpt-image-2.6-sunburst/C02/A_r2_s2.png": {
-            "silhouette": 5,
-            "fabric_pattern": 4,
-            "pattern_scale": 2,
-            "colour": 4,
-            "texture": 4,
-            "construction": 4,
-            "usable_for_planning": 3
+          "note_text": "The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it."
+        },
+        "C03": {
+          "observations": [
+            "Scale is no closer: 0.64-1.19 of the real repeat count, against 0.75-0.91 in round 1, so the samples now disagree more with each other.",
+            "Everything else is as in round 1."
+          ],
+          "scores": {
+            "results/gpt-image-2.6-sunburst/C03/A_r2_s1.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 3,
+              "colour": 4,
+              "texture": 4,
+              "construction": 5,
+              "usable_for_planning": 4
+            },
+            "results/gpt-image-2.6-sunburst/C03/A_r2_s2.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 3,
+              "colour": 4,
+              "texture": 4,
+              "construction": 5,
+              "usable_for_planning": 4
+            },
+            "results/gpt-image-2.6-sunburst/C03/A_r2_s3.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 4,
+              "colour": 4,
+              "texture": 4,
+              "construction": 5,
+              "usable_for_planning": 4
+            }
           },
-          "results/gpt-image-2.6-sunburst/C02/A_r2_s3.png": {
-            "silhouette": 5,
-            "fabric_pattern": 4,
-            "pattern_scale": 2,
-            "colour": 4,
-            "texture": 4,
-            "construction": 4,
-            "usable_for_planning": 3
-          }
+          "note_text": "The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem."
         }
       },
-      "C03": {
-        "note": "The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem.",
-        "observations": [
-          "Scale is no closer: 0.64-1.19 of the real repeat count, against 0.75-0.91 in round 1, so the samples now disagree more with each other.",
-          "Everything else is as in round 1."
-        ],
-        "scores": {
-          "results/gpt-image-2.6-sunburst/C03/A_r2_s1.png": {
-            "silhouette": 4,
-            "fabric_pattern": 4,
-            "pattern_scale": 3,
-            "colour": 4,
-            "texture": 4,
-            "construction": 5,
-            "usable_for_planning": 4
+      "id": "r2",
+      "title": "Round 2: stating the scale as a number",
+      "match": "A_r2_",
+      "note_label": "Round 2 scale note"
+    },
+    {
+      "id": "r3",
+      "title": "Round 3: giving the scale as an image (variant E)",
+      "match": "E_r3_",
+      "note_label": "Composite",
+      "question": "Does a swatch pasted onto the drawing at true scale fix what words could not?",
+      "change": "Variant E sends three images: a mock-up with the swatch tiled inside the drawing's outline at true scale (scripts/composite.py), the line drawing, and the swatch, with its own prompt template. The scale factor is the drawing's extent over the real garment's along the measured axis; nothing else is taken from the ground truth.",
+      "summary": [
+        "Yes, mostly. The stripe landed at 0.85-0.93 of the real count, against 0.49-0.62 in round 1 and 1.5-1.9 in round 2. Two of three plaid samples landed at 0.94 and 1.00; the third at 0.66.",
+        "The model took scale from the image and materials from the text: the mock-up has plaid on the blouse, lace and bloomers, and every output made them white as the description says.",
+        "The mock-up also sets the pattern's direction. Its flat horizontal stripes carried into the bodice and drape, where the real dress and round 1 run them on the bias. A mock-up should be laid out the way the fabric will be cut, not tiled flat.",
+        "It costs a third input image: $0.063-0.066 per output against about $0.050.",
+        "The composite's own repeat count reads 0.46 of the truth for the plaid, which is the tiling seam every 275px being measured instead of the plaid. The plaid in it is at true scale by construction (320px x 0.393 = 126px per repeat, 8.0 across)."
+      ],
+      "cases": {
+        "C02": {
+          "observations": [
+            "Stripe width now matches the real dress: 0.85-0.93 of its count down the underskirt.",
+            "Stripes run horizontally on the bodice and overskirt as in the mock-up; the real dress and round 1 run them on the bias with the drape, so the drape reads flatter."
+          ],
+          "scores": {
+            "results/gpt-image-2.6-sunburst/C02/E_r3_s1.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 4,
+              "colour": 4,
+              "texture": 4,
+              "construction": 4,
+              "usable_for_planning": 4
+            },
+            "results/gpt-image-2.6-sunburst/C02/E_r3_s2.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 4,
+              "colour": 4,
+              "texture": 4,
+              "construction": 4,
+              "usable_for_planning": 4
+            },
+            "results/gpt-image-2.6-sunburst/C02/E_r3_s3.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 4,
+              "colour": 4,
+              "texture": 4,
+              "construction": 4,
+              "usable_for_planning": 4
+            }
           },
-          "results/gpt-image-2.6-sunburst/C03/A_r2_s2.png": {
-            "silhouette": 4,
-            "fabric_pattern": 4,
-            "pattern_scale": 3,
-            "colour": 4,
-            "texture": 4,
-            "construction": 5,
-            "usable_for_planning": 4
+          "note_text": "swatch tiled at scale 0.953, measured down the garment"
+        },
+        "C03": {
+          "observations": [
+            "Two samples match the real plaid's scale (0.94, 1.00); sample 1 is at 0.66.",
+            "Blouse, lace and bloomers are white as described although the mock-up shows them in plaid; construction is as in round 1."
+          ],
+          "scores": {
+            "results/gpt-image-2.6-sunburst/C03/E_r3_s1.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 3,
+              "colour": 4,
+              "texture": 4,
+              "construction": 5,
+              "usable_for_planning": 4
+            },
+            "results/gpt-image-2.6-sunburst/C03/E_r3_s2.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 5,
+              "colour": 4,
+              "texture": 4,
+              "construction": 5,
+              "usable_for_planning": 5
+            },
+            "results/gpt-image-2.6-sunburst/C03/E_r3_s3.png": {
+              "silhouette": 4,
+              "fabric_pattern": 4,
+              "pattern_scale": 5,
+              "colour": 4,
+              "texture": 4,
+              "construction": 5,
+              "usable_for_planning": 5
+            }
           },
-          "results/gpt-image-2.6-sunburst/C03/A_r2_s3.png": {
-            "silhouette": 4,
-            "fabric_pattern": 4,
-            "pattern_scale": 4,
-            "colour": 4,
-            "texture": 4,
-            "construction": 5,
-            "usable_for_planning": 4
-          }
+          "note_text": "swatch tiled at scale 0.393, measured across the garment"
         }
       }
     }
-  }
+  ]
 }

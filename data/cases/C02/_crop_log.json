@@ -35,6 +35,17 @@
     "ground_truth/photo.jpg": {
       "crop": null,
       "method": "copy of source"
+    },
+    "inputs/composite.png": {
+      "method": "swatch tiled inside the line drawing's filled outline, lines multiplied on top",
+      "scale": 0.9534,
+      "axis": "down",
+      "drawing_extent_px": 1515,
+      "truth_extent_px": 1589,
+      "tile_px": [
+        324,
+        286
+      ]
     }
   }
 }

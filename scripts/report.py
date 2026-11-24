@@ -127,7 +127,8 @@ def main():
           f"| Settings | {', '.join(sorted({r['quality'] + ' quality, ' + r['size'] for r in gen}))} |",
           "| Prompt | One template per task type, filled only from the case's item and scale fields; no per-case tuning in round 1 (templates in [data/manifest.json](data/manifest.json)) |",
           "| Samples | 3 per case x model x variant. The API has no seed, so samples are independent draws |",
-          "| Variant A | line drawing + fabric swatch → product photo |",
+          "| Variant A | line drawing (or base photo) + fabric swatch → product photo |",
+          "| Variant E | swatch pasted onto the drawing at true scale + line drawing + swatch → product photo (round 3, C02 and C03) |",
           "| Auto-checks | CIEDE2000 between the swatch's 4 dominant colours and the garment's; pattern repeat count by autocorrelation along the case's repeat axis, compared with the ground truth's |",
           "| Scoring | 1-5 on " + ", ".join(AXES) + "; pattern_scale is n/a for plain fabrics |", ""]
     notes = [c for c in cases if c.get("notes")]
@@ -159,7 +160,7 @@ def main():
         L += [f"### {c['id']} · {c['task']} · {c['material']}", "", f"![{c['id']}]({fig})", ""]
         L += ["**What worked**", ""] + [f"- {s}" for s in e["worked"]] + [""]
         L += ["**Issues**", ""] + [f"- {s}" for s in e["issues"]] + [""]
-        rows = [r for r in auto if r["case"] == c["id"] and "_r2_" not in r["file"]]
+        rows = [r for r in auto if r["case"] == c["id"] and ("photo" in r["file"] or "A_r1_" in r["file"])]
         if rows:
             L += [f"| Image | ΔE mean | ΔE max | Repeats {rows[0]['repeat_axis']} | vs ground truth |", "|---|---|---|---|---|"]
             for r in rows:
@@ -180,21 +181,21 @@ def main():
             L.append("| **median** | " + " | ".join(str(statistics.median(med(a))) if med(a) else "n/a" for a in AXES) + " |")
             L += [""]
 
-    r2 = ev.get("round2")
-    if r2:
-        L += ["## 5. Round 2: stating the scale as a number", "", f"**Question.** {r2['question']}", "", r2["change"], ""]
-        L += [f"- {s}" for s in r2["summary"]] + [""]
-        for cid, rc in r2["cases"].items():
+    rounds = ev.get("rounds", [])
+    for n, rd in enumerate(rounds, 5):
+        L += [f"## {n}. {rd['title']}", "", f"**Question.** {rd['question']}", "", rd["change"], ""]
+        L += [f"- {s}" for s in rd["summary"]] + [""]
+        for cid, rc in rd["cases"].items():
             c = next(x for x in m["cases"] if x["id"] == cid)
             d = case_dir(cid)
-            r1 = sorted(RESULTS.glob(f"*/{cid}/A_r1_s1.png"))
-            r2o = sorted(RESULTS.glob(f"*/{cid}/A_r2_*.png"))
-            tiles = [(p, "Round 1 " + p.stem, "output", None) for p in r1] + [(p, "Round 2 " + p.stem, "output", None) for p in r2o]
+            tiles = [(d / "inputs/composite.png", "Input: composite", "input", None)] if rd["id"] == "r3" else []
+            tiles += [(p, "Round 1 " + p.stem, "output", None) for p in sorted(RESULTS.glob(f"*/{cid}/A_r1_s1.png"))]
+            tiles += [(p, p.stem, "output", None) for p in sorted(RESULTS.glob(f"*/{cid}/{rd['match']}*.png"))]
             tiles += [(d / p, "Ground truth", "truth", (c.get("fixture") or {}).get("garment_box")) for p in c["ground_truth"]]
-            fig = strip(f"{cid}_r2", tiles)
-            L += [f"### {cid} · {c['material']}", "", f"Round 2 scale note: *{rc['note']}*", "", f"![{cid} round 2]({fig})", ""]
+            fig = strip(f"{cid}_{rd['id']}", tiles)
+            L += [f"### {cid} · {c['material']}", "", f"{rd['note_label']}: *{rc['note_text']}*", "", f"![{cid} {rd['id']}]({fig})", ""]
             L += [f"- {s}" for s in rc["observations"]] + [""]
-            rows = [r for r in auto if r["case"] == cid]
+            rows = [r for r in auto if r["case"] == cid and ("photo" in r["file"] or rd["match"] in r["file"] or "A_r1_" in r["file"])]
             if rows:
                 L += [f"| Image | ΔE mean | Repeats {rows[0]['repeat_axis']} | vs ground truth |", "|---|---|---|---|"]
                 L += [f"| {r['file'].split('/')[-1]} | {r['dE_mean']} | {r['repeats']} | {r['repeats_vs_truth']} |" for r in rows]
@@ -205,7 +206,7 @@ def main():
                 L += [f"| {f.split('/')[-1]} | " + " | ".join(str(s[a]) for a in AXES) + " |" for f, s in sc.items()]
                 L += [""]
 
-    L += [f"## {6 if r2 else 5}. Cost and latency", "",
+    L += [f"## {5 + len(rounds)}. Cost and latency", "",
           "Cost per call is computed from the response's `usage` tokens at standard-tier prices "
           "($5 / 1M text input, $8 / 1M image input, $30 / 1M image output).", "",
           "| Step | Model | Quality, size | Calls | Mean cost | Mean latency | Total |", "|---|---|---|---|---|---|---|"]

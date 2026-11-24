@@ -12,7 +12,8 @@
     "T3": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric for this colourway. Create a realistic e-commerce product photo of this exact garment made from this exact fabric. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add trims, prints or details that are not in the drawing.",
     "T4": "Image 1 is a photo of a {item}. Recolour the garment: {recolor}. Keep the shape, fabric texture, pattern layout, lighting and background exactly as they are. Change nothing else.",
     "T5": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the base fabric. Image 3 is the {motif_name}. Create a realistic e-commerce product photo of this exact garment in this fabric, with the {motif_name} placed {placement}. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add details that are not in the drawing.",
-    "T6": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric. Create a realistic e-commerce product photo of this exact garment made from this exact fabric, reproducing the construction exactly as drawn, especially the {detail}. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add details that are not in the drawing."
+    "T6": "Image 1 is a flat line drawing of a {item}. Image 2 is a swatch of the fabric. Create a realistic e-commerce product photo of this exact garment made from this exact fabric, reproducing the construction exactly as drawn, especially the {detail}. {scale_note} Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add details that are not in the drawing.",
+    "E": "Image 1 is a flat mock-up: the fabric has been pasted onto the garment's line drawing at the correct scale. Image 2 is the line drawing of a {item}. Image 3 is a swatch of the fabric. Create a realistic e-commerce product photo of this exact garment in this fabric. Keep the pattern's scale exactly as in Image 1: the same size of repeat, and the same number of repeats across and down the garment. Let the pattern follow the garment's drape, seams and pleats as real fabric would, and make the parts the description names in another material from that material. Show the whole garment front-on, on an invisible mannequin, on a plain light grey background. Do not add trims, prints or details that are not in the drawing."
   },
   "cases": [
     {
@@ -93,6 +94,17 @@
       "round2": {
         "scale_note": "The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it.",
         "why": "Round 1 drew the stripes about twice too wide with no scale note."
+      },
+      "variants": {
+        "E": {
+          "inputs": [
+            "inputs/composite.png",
+            "inputs/line_drawing.png",
+            "inputs/fabric.jpg"
+          ],
+          "template": "E",
+          "why": "Rounds 1 and 2 could not set the pattern scale with words; E gives it as an image."
+        }
       }
     },
     {
@@ -136,6 +148,17 @@
       "round2": {
         "scale_note": "The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem.",
         "why": "Round 1 drew the plaid 10-25% too large with a qualitative scale note."
+      },
+      "variants": {
+        "E": {
+          "inputs": [
+            "inputs/composite.png",
+            "inputs/line_drawing.png",
+            "inputs/fabric.jpg"
+          ],
+          "template": "E",
+          "why": "Rounds 1 and 2 could not set the pattern scale with words; E gives it as an image."
+        }
       }
     },
     {

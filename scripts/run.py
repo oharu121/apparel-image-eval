@@ -64,11 +64,11 @@ def actual_cost(usage):
             + usage.output_tokens * PRICE["image_out"])
 
 
-def build_prompt(m, c, rnd=1):
+def build_prompt(m, c, rnd=1, template=None):
     fields = {k: c.get(k, "") for k in ("item", "scale_note", "recolor", "motif_name", "placement", "detail")}
     if rnd >= 2:  # round 2 overrides only the fields its block names
         fields.update({k: v for k, v in (c.get("round2") or {}).items() if k in fields})
-    return " ".join(m["prompt_template"][c["task"]].format(**fields).split())
+    return " ".join(m["prompt_template"][template or c["task"]].format(**fields).split())
 
 
 def plan(m, a):
@@ -77,15 +77,20 @@ def plan(m, a):
         if c.get("status") != "ready" or (a.cases and c["id"] not in a.cases):
             continue
         d = case_dir(c["id"])
+        v = (c.get("variants") or {}).get(a.variant)
+        if a.variant != "A" and not v:
+            continue  # a non-default variant runs only on cases that define it
+        names_base = v["inputs"] if v else c["inputs"]
+        template = v.get("template") if v else None
         # A colourway set (T3) runs the same inputs once per swatch, swapping only the fabric.
         sets = [(f"_cw{k}", [p if p != c["inputs"][-1] else cw for p in c["inputs"]])
-                for k, cw in enumerate(c["colourways"], 1)] if c.get("colourways") else [("", c["inputs"])]
+                for k, cw in enumerate(c["colourways"], 1)] if c.get("colourways") else [("", names_base)]
         for tag, names in sets:
             inputs = [d / p for p in names]
             assert not any("ground_truth" in str(p) for p in inputs), f"{c['id']}: ground truth in inputs"
             for s in range(1, a.samples + 1):
                 out = RESULTS / a.model / c["id"] / f"{a.variant}{tag}_r{a.round}_s{s}.png"
-                jobs.append(dict(case=c["id"], inputs=inputs, prompt=build_prompt(m, c, a.round), sample=s, out=out))
+                jobs.append(dict(case=c["id"], inputs=inputs, prompt=build_prompt(m, c, a.round, template), sample=s, out=out))
     return jobs
 
 
@@ -97,7 +102,8 @@ def main():
     ap.add_argument("--quality", default="medium", choices=list(OUT_TOKENS_1K))
     ap.add_argument("--samples", type=int, default=3)
     ap.add_argument("--round", type=int, default=1)
-    ap.add_argument("--variant", default="A", help="A = drawing/photo + swatch in one edit call")
+    ap.add_argument("--variant", default="A", help="A = drawing/photo + swatch in one edit call; others are "
+                    "defined per case under case.variants (E = swatch composited at true scale)")
     ap.add_argument("--max-cost", type=float, default=5.0, help="USD budget for this invocation")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()

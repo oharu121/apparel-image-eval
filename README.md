@@ -35,6 +35,7 @@ scripts/
   fetch_met.py         search / download Met Open Access garments, checking public-domain status per object
   make_fixtures.py     source photo → swatch, edge-detection line drawing, ground truth
   trace_drawing.py     line drawing traced by the image model, for garments edge detection cannot handle
+  composite.py         variant E input: the swatch tiled inside the drawing's outline at true scale
   run.py               generation, with --dry-run, --max-cost and skip-if-exists
   autocheck.py         colour ΔE vs swatch and pattern repeat count, for patterned cases
   preserve_check.py    for cases with no ground truth: shape kept, colour hit, recolour accuracy
@@ -77,6 +78,9 @@ uv run --env-file .env scripts/trace_drawing.py C03
 # set case.status to "ready"
 uv run scripts/run.py --dry-run
 uv run --env-file .env scripts/run.py --cases C03 --max-cost 0.5
+# round 2 (fields from case.round2) and variant E (inputs from case.variants.E):
+uv run --env-file .env scripts/run.py --cases C02 C03 --round 2
+uv run scripts/composite.py C02 C03 && uv run --env-file .env scripts/run.py --variant E --round 3
 uv run scripts/autocheck.py
 uv run scripts/preserve_check.py
 uv run scripts/gallery.py && open gallery/index.html

@@ -7,7 +7,7 @@ Cases evaluated: C01, C02, C03, C04, C05, C06, C07, C08, C09, C10 of 10 planned.
 - Shape is the strongest result. In all ten cases the line drawing's or base photo's silhouette and construction are kept: collars, lapels, buttons, smocking, drapes, pleats, trims and puff sleeves land where they are drawn. Median construction score is 4-5.
 - Editing a photo works better than building from a drawing. Re-fabricating the coat (C06) and recolouring the striped dress (C08) kept every detail of the original, with the lowest colour error of any case (ΔE 1.7-2.2) and a stripe count that did not change.
 - Colour is reliable when it comes from an image: ΔE 1.7-3.9 against the swatch in most cases. Colour given only in text is not. The knit's gold motifs came out gold in one sample of three, a wrong word in the description (white bloomers) went into every sample, and a requested hex landed about ΔE 8 away.
-- Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt. Stating the size as a number in round 2 moved the scale but did not set it: the stripe overshot to 1.5-1.9 times the real count (section 5).
+- Pattern scale is the main failure of building from a drawing, and words do not fix it. The plaid is drawn 10-25% too large and the stripe about twice too wide; stating the size as a number (round 2) moved the stripe to 1.5-1.9 times the real count instead. Giving the scale as an image (round 3, the swatch pasted onto the drawing at true scale) brought the stripe to 0.85-0.93 and two of three plaid samples to 0.94-1.00 (sections 5 and 6).
 - Material transfers unevenly. Twill, knit stitch and velvet pile came through; the satin's sheen did not, and the satin dress came out matte.
 - Placement by text works. Two prints were put in the right zones (C09) although the drawing does not mark the zones.
 - A colourway set is only as consistent as its swatches. Four swatches cut from different parts of one large repeat produced four different motifs on one consistent coat (C07).
@@ -42,7 +42,8 @@ Licences, authors and derivations for every file are in [data/SOURCES.csv](data/
 | Settings | medium quality, 1024x1536 |
 | Prompt | One template per task type, filled only from the case's item and scale fields; no per-case tuning in round 1 (templates in [data/manifest.json](data/manifest.json)) |
 | Samples | 3 per case x model x variant. The API has no seed, so samples are independent draws |
-| Variant A | line drawing + fabric swatch → product photo |
+| Variant A | line drawing (or base photo) + fabric swatch → product photo |
+| Variant E | swatch pasted onto the drawing at true scale + line drawing + swatch → product photo (round 3, C02 and C03) |
 | Auto-checks | CIEDE2000 between the swatch's 4 dominant colours and the garment's; pattern repeat count by autocorrelation along the case's repeat axis, compared with the ground truth's |
 | Scoring | 1-5 on silhouette, fabric_pattern, pattern_scale, colour, texture, construction, usable_for_planning; pattern_scale is n/a for plain fabrics |
 
@@ -357,7 +358,7 @@ Only the scale note changed, filled from each case's "round2" block in data/mani
 
 Round 2 scale note: *The stripes are narrow and must be drawn to scale: about 40 navy stripes fit from collar to hem, each navy stripe about as wide as the cream stripe beside it.*
 
-![C02 round 2](report/figures/C02_r2.jpg)
+![C02 r2](report/figures/C02_r2.jpg)
 
 - Stripes are now visibly finer than the real dress's: 1.5-1.9 times the real count down the underskirt, against 0.49-0.62 in round 1.
 - The swatch's stains no longer appear, but with three samples that may be chance.
@@ -382,7 +383,7 @@ Round 2 scale note: *The stripes are narrow and must be drawn to scale: about 40
 
 Round 2 scale note: *The plaid is large and must be drawn to scale: one full repeat is about one seventh of the skirt's width at the hem, so about 7 repeats run across the hem.*
 
-![C03 round 2](report/figures/C03_r2.jpg)
+![C03 r2](report/figures/C03_r2.jpg)
 
 - Scale is no closer: 0.64-1.19 of the real repeat count, against 0.75-0.91 in round 1, so the samples now disagree more with each other.
 - Everything else is as in round 1.
@@ -403,7 +404,69 @@ Round 2 scale note: *The plaid is large and must be drawn to scale: one full rep
 | A_r2_s2.png | 4 | 4 | 3 | 4 | 4 | 5 | 4 |
 | A_r2_s3.png | 4 | 4 | 4 | 4 | 4 | 5 | 4 |
 
-## 6. Cost and latency
+## 6. Round 3: giving the scale as an image (variant E)
+
+**Question.** Does a swatch pasted onto the drawing at true scale fix what words could not?
+
+Variant E sends three images: a mock-up with the swatch tiled inside the drawing's outline at true scale (scripts/composite.py), the line drawing, and the swatch, with its own prompt template. The scale factor is the drawing's extent over the real garment's along the measured axis; nothing else is taken from the ground truth.
+
+- Yes, mostly. The stripe landed at 0.85-0.93 of the real count, against 0.49-0.62 in round 1 and 1.5-1.9 in round 2. Two of three plaid samples landed at 0.94 and 1.00; the third at 0.66.
+- The model took scale from the image and materials from the text: the mock-up has plaid on the blouse, lace and bloomers, and every output made them white as the description says.
+- The mock-up also sets the pattern's direction. Its flat horizontal stripes carried into the bodice and drape, where the real dress and round 1 run them on the bias. A mock-up should be laid out the way the fabric will be cut, not tiled flat.
+- It costs a third input image: $0.063-0.066 per output against about $0.050.
+- The composite's own repeat count reads 0.46 of the truth for the plaid, which is the tiling seam every 275px being measured instead of the plaid. The plaid in it is at true scale by construction (320px x 0.393 = 126px per repeat, 8.0 across).
+
+### C02 · stripe
+
+Composite: *swatch tiled at scale 0.953, measured down the garment*
+
+![C02 r3](report/figures/C02_r3.jpg)
+
+- Stripe width now matches the real dress: 0.85-0.93 of its count down the underskirt.
+- Stripes run horizontally on the bodice and overskirt as in the mock-up; the real dress and round 1 run them on the bias with the drape, so the drape reads flatter.
+
+| Image | ΔE mean | Repeats down | vs ground truth |
+|---|---|---|---|
+| photo.jpg | 1.4 | 10.4 | 1.0 |
+| A_r1_s1.png | 3.0 | 5.3 | 0.51 |
+| A_r1_s2.png | 3.9 | 6.4 | 0.62 |
+| A_r1_s3.png | 3.3 | 5.1 | 0.49 |
+| E_r3_s1.png | 3.6 | 9.4 | 0.9 |
+| E_r3_s2.png | 3.9 | 9.7 | 0.93 |
+| E_r3_s3.png | 3.3 | 8.8 | 0.85 |
+
+| Image | silhouette | fabric pattern | pattern scale | colour | texture | construction | usable for planning |
+|---|---|---|---|---|---|---|---|
+| E_r3_s1.png | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+| E_r3_s2.png | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+| E_r3_s3.png | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+
+### C03 · check / plaid
+
+Composite: *swatch tiled at scale 0.393, measured across the garment*
+
+![C03 r3](report/figures/C03_r3.jpg)
+
+- Two samples match the real plaid's scale (0.94, 1.00); sample 1 is at 0.66.
+- Blouse, lace and bloomers are white as described although the mock-up shows them in plaid; construction is as in round 1.
+
+| Image | ΔE mean | Repeats across | vs ground truth |
+|---|---|---|---|
+| photo.jpg | 6.3 | 8.0 | 1.0 |
+| A_r1_s1.png | 3.3 | 7.3 | 0.91 |
+| A_r1_s2.png | 2.6 | 6.0 | 0.75 |
+| A_r1_s3.png | 3.1 | 7.1 | 0.89 |
+| E_r3_s1.png | 2.8 | 5.3 | 0.66 |
+| E_r3_s2.png | 2.1 | 7.5 | 0.94 |
+| E_r3_s3.png | 3.3 | 8.0 | 1.0 |
+
+| Image | silhouette | fabric pattern | pattern scale | colour | texture | construction | usable for planning |
+|---|---|---|---|---|---|---|---|
+| E_r3_s1.png | 4 | 4 | 3 | 4 | 4 | 5 | 4 |
+| E_r3_s2.png | 4 | 4 | 5 | 4 | 4 | 5 | 5 |
+| E_r3_s3.png | 4 | 4 | 5 | 4 | 4 | 5 | 5 |
+
+## 7. Cost and latency
 
 Cost per call is computed from the response's `usage` tokens at standard-tier prices ($5 / 1M text input, $8 / 1M image input, $30 / 1M image output).
 
@@ -412,5 +475,6 @@ Cost per call is computed from the response's `usage` tokens at standard-tier pr
 | drawing trace | `gpt-image-2.6-sunburst` | high, 1024x1536 | 7 | $0.0524 | 31.8s | $0.366 |
 | variant A, round 1 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 39 | $0.0504 | 20.0s | $1.965 |
 | variant A, round 2 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 6 | $0.0523 | 20.8s | $0.314 |
+| variant E, round 3 | `gpt-image-2.6-sunburst` | medium, 1024x1536 | 6 | $0.0648 | 21.6s | $0.389 |
 
-Total spent: **$2.645**. Per-call rows are in [results/log.csv](results/log.csv).
+Total spent: **$3.034**. Per-call rows are in [results/log.csv](results/log.csv).
