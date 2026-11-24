@@ -6,7 +6,9 @@
 Reads case.fixture from manifest.json:
     source_image  path relative to the case dir, e.g. "source/met_159178_0.jpg"
     swatch_box    [x, y, w, h] of a flat, front-on fabric area with as little drape as possible
-    garment_box   [x, y, w, h] around the whole garment, used for the line drawing
+    swatches      instead of swatch_box: {"fabric_1.jpg": [x, y, w, h], ...} for several swatches
+    garment_box   [x, y, w, h] around the whole garment, used for the line drawing and ground
+                  truth; omit it when the source is only fabric (a sample book page)
 
 Museum photos have no grey card, so swatches are kept as published (no white balance).
 """
@@ -62,9 +64,14 @@ def main():
     if img is None:
         raise SystemExit(f"cannot read {src}")
 
+    # Swatches: one "swatch_box" for fabric.jpg, or "swatches" naming several, e.g. a colourway set.
+    swatches = fx.get("swatches") or {"fabric.jpg": fx["swatch_box"]}
+    garment = fx.get("garment_box")  # absent when the case has no garment photo (swatch-only source)
+
     if a.preview:
         out = img.copy()
-        for box, colour in ((fx["swatch_box"], (0, 0, 255)), (fx["garment_box"], (0, 200, 0))):
+        boxes = [(b, (0, 0, 255)) for b in swatches.values()] + [(garment, (0, 200, 0))]
+        for box, colour in boxes:
             if box:
                 x, y, w, h = box
                 cv2.rectangle(out, (x, y), (x + w, y + h), colour, max(2, img.shape[1] // 300))
@@ -73,50 +80,49 @@ def main():
         print(f"wrote {rel(fn)}  ({img.shape[1]}x{img.shape[0]})")
         return
 
-    for sub in ("inputs", "raw_crops", "ground_truth"):
+    for sub in ("inputs", "raw_crops") + (("ground_truth",) if garment else ()):
         (d / sub).mkdir(exist_ok=True)
+    prev = d / "_crop_log.json"
+    old_files = json.loads(prev.read_text())["files"] if prev.exists() else {}
     log = {"case": a.case, "source_image": rel(src), "made": today(), "files": {}}
     base = {"case": a.case, "source_url": "", "license": "", "author": "", "title": "", "synthetic": "false"}
+    outputs = []
 
-    sw = crop(img, fx["swatch_box"])
-    for fn in (d / "raw_crops/fabric.jpg", d / "inputs/fabric.jpg"):
-        cv2.imwrite(str(fn), sw, [cv2.IMWRITE_JPEG_QUALITY, 95])
-    log["files"]["inputs/fabric.jpg"] = {"crop": fx["swatch_box"], "colour_correction": "none (no reference card in source)"}
+    for name, box in swatches.items():
+        sw = crop(img, box)
+        for fn in (d / "raw_crops" / name, d / "inputs" / name):
+            cv2.imwrite(str(fn), sw, [cv2.IMWRITE_JPEG_QUALITY, 95])
+        log["files"][f"inputs/{name}"] = {"crop": box, "colour_correction": "none (no reference card in source)"}
+        outputs.append((f"inputs/{name}", "input_fabric"))
 
-    # The edge drawing always goes to line_drawing_edges.png. It becomes line_drawing.png only
-    # when there is none yet, so a drawing made by trace_drawing.py or by hand is never overwritten.
-    ld = line_drawing(crop(img, fx["garment_box"]))
-    cv2.imwrite(str(d / "inputs/line_drawing_edges.png"), ld)
-    log["files"]["inputs/line_drawing_edges.png"] = {"crop": fx["garment_box"], "method": "median+bilateral blur, Canny 30/90, speck removal"}
-    drawing_is_edges = not (d / "inputs/line_drawing.png").exists()
-    if drawing_is_edges:
-        shutil.copy(d / "inputs/line_drawing_edges.png", d / "inputs/line_drawing.png")
-        log["files"]["inputs/line_drawing.png"] = {**log["files"]["inputs/line_drawing_edges.png"], "copy_of": "inputs/line_drawing_edges.png"}
-    else:
-        prev = d / "_crop_log.json"
-        if prev.exists():
-            old = json.loads(prev.read_text())["files"].get("inputs/line_drawing.png")
-            if old:
-                log["files"]["inputs/line_drawing.png"] = old
-        print("kept existing inputs/line_drawing.png")
-
-    shutil.copy(src, d / "ground_truth/photo.jpg")
-    log["files"]["ground_truth/photo.jpg"] = {"crop": None, "method": "copy of source"}
+    if garment:
+        # The edge drawing always goes to line_drawing_edges.png. It becomes line_drawing.png only
+        # when there is none yet, so a drawing made by trace_drawing.py or by hand is never overwritten.
+        ld = line_drawing(crop(img, garment))
+        cv2.imwrite(str(d / "inputs/line_drawing_edges.png"), ld)
+        log["files"]["inputs/line_drawing_edges.png"] = {"crop": garment, "method": "median+bilateral blur, Canny 30/90, speck removal"}
+        outputs.append(("inputs/line_drawing_edges.png", "reference"))
+        if not (d / "inputs/line_drawing.png").exists():
+            shutil.copy(d / "inputs/line_drawing_edges.png", d / "inputs/line_drawing.png")
+            log["files"]["inputs/line_drawing.png"] = {**log["files"]["inputs/line_drawing_edges.png"], "copy_of": "inputs/line_drawing_edges.png"}
+            outputs.append(("inputs/line_drawing.png", "input_drawing"))
+        else:
+            if "inputs/line_drawing.png" in old_files:
+                log["files"]["inputs/line_drawing.png"] = old_files["inputs/line_drawing.png"]
+            print("kept existing inputs/line_drawing.png")
+        shutil.copy(src, d / "ground_truth/photo.jpg")
+        log["files"]["ground_truth/photo.jpg"] = {"crop": None, "method": "copy of source"}
+        outputs.append(("ground_truth/photo.jpg", "ground_truth"))
     (d / "_crop_log.json").write_text(json.dumps(log, indent=2) + "\n")
 
     with SOURCES.open(newline="") as f:
         parent = next((r for r in csv.DictReader(f) if r["file"] == rel(src)), None)
     if parent:
         base.update({k: parent[k] for k in ("source_url", "license", "author", "title", "object_date")})
-    outputs = [("inputs/fabric.jpg", "input_fabric"), ("inputs/line_drawing_edges.png", "reference"),
-               ("ground_truth/photo.jpg", "ground_truth")]
-    if drawing_is_edges:
-        outputs.append(("inputs/line_drawing.png", "input_drawing"))
     for name, role in outputs:
         add_source({**base, "file": rel(d / name), "role": role, "retrieved": today(),
                     "derived_from": rel(src), "notes": json.dumps(log["files"][name])})
         print("wrote", rel(d / name))
-
 
 if __name__ == "__main__":
     main()

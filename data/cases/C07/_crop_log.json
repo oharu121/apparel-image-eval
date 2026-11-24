@@ -1,0 +1,43 @@
+{
+  "case": "C07",
+  "source_image": "data/cases/C07/source/met_229185_0.jpg",
+  "made": "2026-11-24",
+  "files": {
+    "inputs/fabric_1.jpg": {
+      "crop": [
+        320,
+        240,
+        350,
+        150
+      ],
+      "colour_correction": "none (no reference card in source)"
+    },
+    "inputs/fabric_2.jpg": {
+      "crop": [
+        320,
+        640,
+        350,
+        150
+      ],
+      "colour_correction": "none (no reference card in source)"
+    },
+    "inputs/fabric_3.jpg": {
+      "crop": [
+        1045,
+        240,
+        325,
+        150
+      ],
+      "colour_correction": "none (no reference card in source)"
+    },
+    "inputs/fabric_4.jpg": {
+      "crop": [
+        1045,
+        900,
+        325,
+        150
+      ],
+      "colour_correction": "none (no reference card in source)"
+    }
+  }
+}

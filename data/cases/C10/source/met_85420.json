@@ -1,0 +1,173 @@
+{
+  "objectID": 85420,
+  "isHighlight": false,
+  "accessionNumber": "C.I.54.4.1a–c",
+  "accessionYear": "1953",
+  "isPublicDomain": true,
+  "primaryImage": "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_F.jpg",
+  "primaryImageSmall": "https://images.metmuseum.org/CRDImages/ci/web-large/C.I.54.4.1ab_F.jpg",
+  "additionalImages": [
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_TQL1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_S.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_TQL2.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_B.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_d1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_d2.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1ab_d3.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_F.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_TQL1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_S.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_TQL2.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_B.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_d1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_d2.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1bc_d3.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1a_label1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1a_label2.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/C.I.54.4.1c_label.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1a_F.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1a_B.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1a_d1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1c_F.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1c_B.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1c_d1.jpg",
+    "https://images.metmuseum.org/CRDImages/ci/original/CI54.4.1c_d2.jpg"
+  ],
+  "constituents": [
+    {
+      "constituentID": 165602,
+      "role": "Design House",
+      "name": "House of Worth",
+      "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500524504",
+      "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q5915543",
+      "gender": ""
+    },
+    {
+      "constituentID": 162762,
+      "role": "Designer",
+      "name": "Charles Frederick Worth",
+      "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500033099",
+      "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q454330",
+      "gender": ""
+    }
+  ],
+  "department": "Costume Institute",
+  "objectName": "Evening dress",
+  "title": "Evening dress",
+  "culture": "French",
+  "period": "",
+  "dynasty": "",
+  "reign": "",
+  "portfolio": "",
+  "artistRole": "Design House",
+  "artistPrefix": "",
+  "artistDisplayName": "House of Worth",
+  "artistDisplayBio": "French, 1858–1956",
+  "artistSuffix": "",
+  "artistAlphaSort": "Worth, House of",
+  "artistNationality": "French",
+  "artistBeginDate": "1858",
+  "artistEndDate": "1956",
+  "artistGender": "",
+  "artistWikidata_URL": "https://www.wikidata.org/wiki/Q5915543",
+  "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500524504",
+  "objectDate": "1893–95",
+  "objectBeginDate": 1893,
+  "objectEndDate": 1895,
+  "medium": "silk",
+  "dimensions": "",
+  "measurements": [
+    {
+      "elementName": "Width",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Width": 467.3609
+      }
+    },
+    {
+      "elementName": "Other",
+      "elementDescription": "Waist",
+      "elementMeasurements": {
+        "Length": 78.7402
+      }
+    },
+    {
+      "elementName": "Length at CF",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Length": 116.8402
+      }
+    },
+    {
+      "elementName": "Other",
+      "elementDescription": "Waist",
+      "elementMeasurements": {
+        "Length": 66.0401
+      }
+    },
+    {
+      "elementName": "Length at CF",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Length": 35.5601
+      }
+    },
+    {
+      "elementName": "Length at CB",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Length": 35.5601
+      }
+    },
+    {
+      "elementName": "Other",
+      "elementDescription": "Waist",
+      "elementMeasurements": {
+        "Length": 63.5001
+      }
+    },
+    {
+      "elementName": "Length at CB",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Length": 63.5001
+      }
+    },
+    {
+      "elementName": "Length at CB",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Length": 167.6403
+      }
+    },
+    {
+      "elementName": "Length at CF",
+      "elementDescription": null,
+      "elementMeasurements": {
+        "Length": 48.2601
+      }
+    }
+  ],
+  "creditLine": "Gift of Mrs. Frederick M. Godwin, 1954",
+  "geographyType": "",
+  "city": "",
+  "state": "",
+  "county": "",
+  "country": "",
+  "region": "",
+  "subregion": "",
+  "locale": "",
+  "locus": "",
+  "excavation": "",
+  "river": "",
+  "classification": "",
+  "rightsAndReproduction": "",
+  "linkResource": "",
+  "metadataDate": "2026-02-11T04:58:02.963Z",
+  "repository": "Metropolitan Museum of Art, New York, NY",
+  "objectURL": "https://www.metmuseum.org/art/collection/search/85420",
+  "tags": null,
+  "objectWikidata_URL": "https://www.wikidata.org/wiki/Q100708482",
+  "isTimelineWork": false,
+  "GalleryNumber": ""
+}

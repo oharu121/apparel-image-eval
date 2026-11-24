@@ -75,11 +75,15 @@ def plan(m, a):
         if c.get("status") != "ready" or (a.cases and c["id"] not in a.cases):
             continue
         d = case_dir(c["id"])
-        inputs = [d / p for p in c["inputs"]]
-        assert not any("ground_truth" in str(p) for p in inputs), f"{c['id']}: ground truth in inputs"
-        for s in range(1, a.samples + 1):
-            out = RESULTS / a.model / c["id"] / f"{a.variant}_r{a.round}_s{s}.png"
-            jobs.append(dict(case=c["id"], inputs=inputs, prompt=build_prompt(m, c), sample=s, out=out))
+        # A colourway set (T3) runs the same inputs once per swatch, swapping only the fabric.
+        sets = [(f"_cw{k}", [p if p != c["inputs"][-1] else cw for p in c["inputs"]])
+                for k, cw in enumerate(c["colourways"], 1)] if c.get("colourways") else [("", c["inputs"])]
+        for tag, names in sets:
+            inputs = [d / p for p in names]
+            assert not any("ground_truth" in str(p) for p in inputs), f"{c['id']}: ground truth in inputs"
+            for s in range(1, a.samples + 1):
+                out = RESULTS / a.model / c["id"] / f"{a.variant}{tag}_r{a.round}_s{s}.png"
+                jobs.append(dict(case=c["id"], inputs=inputs, prompt=build_prompt(m, c), sample=s, out=out))
     return jobs
 
 

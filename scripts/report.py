@@ -87,6 +87,7 @@ def main():
     ev = json.loads((RESULTS / "evaluation.json").read_text())
     log = read_csv(RESULTS / "log.csv")
     auto = read_csv(RESULTS / "autocheck.csv")
+    keep = read_csv(RESULTS / "preserve.csv")
     cases = [c for c in m["cases"] if c["id"] in ev["cases"]]
     gen = [r for r in log if r["variant"] != "trace" and not r["error"]]
     models = sorted({r["model"] for r in gen})
@@ -139,6 +140,12 @@ def main():
             for r in rows:
                 L.append(f"| {r['file'].split('/')[-1]} | {r['dE_mean']} | {r['dE_max']} | {r['repeats']} | {r['repeats_vs_truth']} |")
             L += [""]
+        rows = [r for r in keep if r["case"] == c["id"]]
+        if rows:
+            cols = [k for k in rows[0] if k not in ("case", "file") and any(r[k] for r in rows)]
+            L += ["| Image | " + " | ".join(k.replace("_", " ") for k in cols) + " |", "|---" * (len(cols) + 1) + "|"]
+            L += [f"| {r['file'].split('/')[-1]} | " + " | ".join(r[k] for k in cols) + " |" for r in rows]
+            L += ["", "Shape IoU compares silhouettes cropped to their own bounding boxes; two unrelated full-length garments already score 0.74, so only values well above that show the shape was kept.", ""]
         sc = e.get("scores", {})
         if sc:
             L += ["| Image | " + " | ".join(a.replace("_", " ") for a in AXES) + " |", "|---" * (len(AXES) + 1) + "|"]

@@ -200,28 +200,27 @@
       "task": "T2",
       "item": "man's double-breasted frock coat",
       "material": "C05 coat photo + C03 plaid swatch",
-      "status": "designed",
+      "status": "ready",
       "source": "Reuses C05 (Met 84364) as the base photo and C03 (Met 159177) as the swatch; no ground truth exists for a garment re-made in another fabric",
       "inputs": [
         "inputs/base_photo.jpg",
         "inputs/fabric.jpg"
       ],
       "ground_truth": [],
-      "scale_note": "The plaid is large: about eight repeats across the width of a child's skirt.",
+      "scale_note": "",
       "checks": [
         "silhouette IoU between the base photo and the output (shape must not change)",
-        "ΔE against the swatch",
-        "repeat count across the coat"
+        "ΔE against the swatch"
       ],
-      "notes": "base_photo.jpg is the C05 garment crop; fabric.jpg is the C03 swatch."
+      "notes": "base_photo.jpg is the C05 garment crop; fabric.jpg is the C03 swatch. No scale note: the plaid's real size is unknown, so pattern scale is not scored."
     },
     {
       "id": "C07",
       "task": "T3",
       "item": "man's double-breasted frock coat",
       "material": "one design in 4 colourways from a museum textile sample book",
-      "status": "designed",
-      "source": "Line drawing reused from C05; swatches cut from one page of a public-domain Met textile sample book (candidates 229185, 229174, 229182)",
+      "status": "ready",
+      "source": "Line drawing reused from C05; swatches cut from one page of a Met textile sample book (229185, 1890s) showing one floral damask in 11 colourways",
       "autocheck": true,
       "inputs": [
         "inputs/line_drawing.png",
@@ -238,14 +237,43 @@
         "pairwise silhouette IoU across the 4 colourways (consistency)",
         "ΔE of each output against its own swatch"
       ],
-      "notes": "Scored on consistency across the set, since only one colourway is ever sampled in practice."
+      "notes": "Scored on consistency across the set, since only one colourway is ever sampled in practice. Colourways: violet on white, grey-blue on white, blue on black, red on black.",
+      "fixture": {
+        "source_image": "source/met_229185_0.jpg",
+        "swatches": {
+          "fabric_1.jpg": [
+            320,
+            240,
+            350,
+            150
+          ],
+          "fabric_2.jpg": [
+            320,
+            640,
+            350,
+            150
+          ],
+          "fabric_3.jpg": [
+            1045,
+            240,
+            325,
+            150
+          ],
+          "fabric_4.jpg": [
+            1045,
+            900,
+            325,
+            150
+          ]
+        }
+      }
     },
     {
       "id": "C08",
       "task": "T4",
       "item": "woman's striped day dress",
       "material": "recolour: navy stripes to burgundy #7A1F2B, cream unchanged",
-      "status": "designed",
+      "status": "ready",
       "source": "Reuses the C02 photo (Met 157306) as the base; no ground truth",
       "inputs": [
         "inputs/base_photo.jpg"
@@ -272,7 +300,27 @@
       "status": "designed",
       "source": "The Met 159521 (Dress, ca. 1850, cotton, 2009.300.935)",
       "fixture": {
-        "source_image": "source/met_159521_0.jpg"
+        "source_image": "source/met_159521_0.jpg",
+        "swatches": {
+          "fabric.jpg": [
+            1250,
+            2300,
+            450,
+            450
+          ],
+          "fabric_b.jpg": [
+            2080,
+            2450,
+            300,
+            400
+          ]
+        },
+        "garment_box": [
+          330,
+          755,
+          2180,
+          2935
+        ]
       },
       "inputs": [
         "inputs/line_drawing.png",
@@ -293,10 +341,10 @@
     {
       "id": "C10",
       "task": "T6",
-      "item": "woman's day dress with a fitted bodice and gored skirt",
-      "material": "construction: leg-of-mutton sleeves",
+      "item": "woman's evening dress with an off-the-shoulder neckline, a deep lace bertha, a pointed fitted bodice and a long gored skirt, in the swatch fabric with cream lace",
+      "material": "construction: large draped puff sleeves; silk velvet",
       "status": "designed",
-      "source": "Met 1890s leg-of-mutton candidates: 159518 (Dress ca. 1895), 85420 (Evening dress 1893-95), 106673 (Suit 1894-96), 159194 (Riding ensemble ca. 1896)",
+      "source": "The Met 85420 (Evening dress, 1893-95, silk, C.I.54.4.1a-c)",
       "inputs": [
         "inputs/line_drawing.png",
         "inputs/fabric.jpg"
@@ -304,10 +352,26 @@
       "ground_truth": [
         "ground_truth/photo.jpg"
       ],
-      "detail": "leg-of-mutton sleeves: very full and gathered at the shoulder, tapering to tight-fitting from elbow to wrist",
+      "detail": "very large puffed sleeves set at the edge of the shoulders, draped into a deep puff that hangs to the elbow",
       "checks": [
         "visual: sleeve volume and taper against the ground truth"
-      ]
+      ],
+      "fixture": {
+        "source_image": "source/met_85420_0.jpg",
+        "swatch_box": [
+          500,
+          2000,
+          400,
+          400
+        ],
+        "garment_box": [
+          150,
+          450,
+          1300,
+          2840
+        ]
+      },
+      "notes": "Velvet is the second material test after C01 satin: pile and sheen."
     }
   ]
 }
