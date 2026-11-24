@@ -44,7 +44,7 @@ def dashed_rect(draw, box, colour, width=3, dash=12):
         draw.line([(x1, y), (x1, min(y + dash, y1))], colour, width)
 
 
-def strip(case_id, tiles):
+def strip(case_id, tiles, save=True):
     """tiles: list of (path, label, kind, crop_box) with kind in input/output/truth."""
     ims = []
     for path, label, kind, box in tiles:
@@ -69,10 +69,24 @@ def strip(case_id, tiles):
             d.rectangle(box, outline=BLUE, width=4)
         d.text((x, PAD + H + 8), label, fill=BLUE if kind == "truth" else (40, 40, 40), font=f)
         x += im.width + PAD
+    return save_fig(case_id, out) if save else out
+
+
+def save_fig(case_id, im):
     FIG.mkdir(parents=True, exist_ok=True)
     fn = FIG / f"{case_id}.jpg"
-    out.save(fn, quality=88)
+    im.save(fn, quality=88)
     return fn.relative_to(ROOT)
+
+
+def stack(case_id, strips):
+    """One figure from several strips, one under another."""
+    out = Image.new("RGB", (max(s.width for s in strips), sum(s.height for s in strips)), "white")
+    y = 0
+    for s in strips:
+        out.paste(s, (0, y))
+        y += s.height
+    return save_fig(case_id, out)
 
 
 def read_csv(path):
@@ -124,12 +138,23 @@ def main():
           "Dashed grey frame = input, no frame = output, blue frame = ground truth.", ""]
     for c in cases:
         d = case_dir(c["id"])
-        tiles = [(d / p, "Input: " + p.split("/")[-1].split(".")[0].replace("_", " "), "input", None) for p in c["inputs"]]
+        label = lambda p: "Input: " + p.split("/")[-1].split(".")[0].replace("_", " ")
+        out_tile = lambda p: (p, f"{p.parent.parent.name.replace('gpt-image-', '')} {p.stem}", "output", None)
         outs = sorted(RESULTS.glob(f"*/{c['id']}/*.png"))
-        tiles += [(p, f"{p.parent.parent.name.replace('gpt-image-', '')} {p.stem}", "output", None) for p in outs]
-        box = (c.get("fixture") or {}).get("garment_box")
-        tiles += [(d / p, "Ground truth", "truth", box) for p in c["ground_truth"]]
-        fig = strip(c["id"], tiles)
+        if c.get("colourways"):  # one row per colourway: shared inputs, that swatch, its samples
+            shared = [p for p in c["inputs"] if p != c["inputs"][-1]]
+            rows = []
+            for k, cw in enumerate(c["colourways"], 1):
+                tiles = [(d / p, label(p), "input", None) for p in shared + [cw]]
+                tiles += [out_tile(p) for p in outs if f"_cw{k}_" in p.stem]
+                rows.append(strip(c["id"], tiles, save=False))
+            fig = stack(c["id"], rows)
+        else:
+            tiles = [(d / p, label(p), "input", None) for p in c["inputs"]]
+            tiles += [out_tile(p) for p in outs]
+            box = (c.get("fixture") or {}).get("garment_box")
+            tiles += [(d / p, "Ground truth", "truth", box) for p in c["ground_truth"]]
+            fig = strip(c["id"], tiles)
         e = ev["cases"][c["id"]]
         L += [f"### {c['id']} · {c['task']} · {c['material']}", "", f"![{c['id']}]({fig})", ""]
         L += ["**What worked**", ""] + [f"- {s}" for s in e["worked"]] + [""]
@@ -145,7 +170,7 @@ def main():
             cols = [k for k in rows[0] if k not in ("case", "file") and any(r[k] for r in rows)]
             L += ["| Image | " + " | ".join(k.replace("_", " ") for k in cols) + " |", "|---" * (len(cols) + 1) + "|"]
             L += [f"| {r['file'].split('/')[-1]} | " + " | ".join(r[k] for k in cols) + " |" for r in rows]
-            L += ["", "Shape IoU compares silhouettes cropped to their own bounding boxes; two unrelated full-length garments already score 0.74, so only values well above that show the shape was kept.", ""]
+            L += ["", "Shape IoU compares silhouettes cropped to their own bounding boxes; two unrelated full-length garments already score 0.84, so only values well above that show the shape was kept.", ""]
         sc = e.get("scores", {})
         if sc:
             L += ["| Image | " + " | ".join(a.replace("_", " ") for a in AXES) + " |", "|---" * (len(AXES) + 1) + "|"]

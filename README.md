@@ -37,12 +37,14 @@ scripts/
   trace_drawing.py     line drawing traced by the image model, for garments edge detection cannot handle
   run.py               generation, with --dry-run, --max-cost and skip-if-exists
   autocheck.py         colour ΔE vs swatch and pattern repeat count, for patterned cases
+  preserve_check.py    for cases with no ground truth: shape kept, colour hit, recolour accuracy
   gallery.py           static HTML gallery with a blind scoring mode
   report.py            REPORT.md and report/figures/ from the logs and results/evaluation.json
 results/
   <model>/<case>/<variant>_r<round>_s<n>.png
   log.csv              model, size, quality, latency, tokens and cost per call
   autocheck.csv
+  preserve.csv
   evaluation.json      per-case judgments: what worked, issues, 1-5 scores
 gallery/index.html
 REPORT.md              the write-up
@@ -76,6 +78,7 @@ uv run --env-file .env scripts/trace_drawing.py C03
 uv run scripts/run.py --dry-run
 uv run --env-file .env scripts/run.py --cases C03 --max-cost 0.5
 uv run scripts/autocheck.py
+uv run scripts/preserve_check.py
 uv run scripts/gallery.py && open gallery/index.html
 # write the case's judgments into results/evaluation.json, then:
 uv run scripts/report.py

@@ -1,14 +1,15 @@
 {
   "reviewer": "Claude (claude-opus-5-5), reading each output beside its inputs and the ground truth",
   "summary": [
-    "Shape is the strongest result. In all five cases every sample follows the line drawing's silhouette and construction: collars, lapels, buttons, smocking, drapes, pleats and trims land where they are drawn. Median construction score is 4-5.",
-    "Colour is reliable when it comes from the swatch: ΔE 2.1-3.9 against the swatch for the satin, the plaid and the stripe, and matching L* for the near-black wool.",
-    "Pattern scale is the main failure. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt.",
-    "Material character transfers only when the swatch shows it plainly. The plaid's twill and the knit's stitch came through; the satin's sheen did not, and the satin dress came out matte.",
-    "Colour given only in text is unreliable. The knit's gold motifs came out gold in one sample of three, and a wrong word in the description (white bloomers) went into every sample.",
-    "Where the drawing is silent, the model chooses: stripe direction on sleeves and bodice, and pleats in a skirt that has none. A drawing that leaves something out is not a neutral input.",
-    "The swatch is copied literally, defects included: stains on the stripe swatch reappeared on one output's skirt.",
-    "Cost was $0.050-0.054 per image at medium quality, 1024x1536, in 16-28 seconds, plus about $0.05 per case for a traced line drawing."
+    "Shape is the strongest result. In all ten cases the line drawing's or base photo's silhouette and construction are kept: collars, lapels, buttons, smocking, drapes, pleats, trims and puff sleeves land where they are drawn. Median construction score is 4-5.",
+    "Editing a photo works better than building from a drawing. Re-fabricating the coat (C06) and recolouring the striped dress (C08) kept every detail of the original, with the lowest colour error of any case (ΔE 1.7-2.2) and a stripe count that did not change.",
+    "Colour is reliable when it comes from an image: ΔE 1.7-3.9 against the swatch in most cases. Colour given only in text is not. The knit's gold motifs came out gold in one sample of three, a wrong word in the description (white bloomers) went into every sample, and a requested hex landed about ΔE 8 away.",
+    "Pattern scale is the main failure of building from a drawing. The plaid is drawn 10-25% too large and the stripe about twice too wide, even though each swatch was cut from the garment being rebuilt.",
+    "Material transfers unevenly. Twill, knit stitch and velvet pile came through; the satin's sheen did not, and the satin dress came out matte.",
+    "Placement by text works. Two prints were put in the right zones (C09) although the drawing does not mark the zones.",
+    "A colourway set is only as consistent as its swatches. Four swatches cut from different parts of one large repeat produced four different motifs on one consistent coat (C07).",
+    "The model fills silences and copies literally: stripe direction where the drawing gives none, pleats in a skirt that has none, stains from a swatch onto a skirt, and in one colourway a dark background the prompt did not ask for.",
+    "Cost was $0.044-0.058 per image at medium quality, 1024x1536, in 16-28 seconds, plus about $0.05 per case for a traced line drawing."
   ],
   "cases": {
     "C01": {
@@ -213,6 +214,285 @@
           "colour": 5,
           "texture": 3,
           "construction": 5,
+          "usable_for_planning": 4
+        }
+      }
+    },
+    "C06": {
+      "worked": [
+        "The coat is kept exactly: hanger, brown lining at the neck, lapels with slash buttonholes, six buttons, waist seam and flared skirt all stay where they were in the base photo, with the same lighting. Shape IoU against the base is 0.86-0.88.",
+        "The plaid is the swatch's: ΔE 1.7-2.2, the lowest of any case, with the swatch's twill and slub stripes, and it is cut on the straight grain on the body and sleeves."
+      ],
+      "issues": [
+        "Plaid is not matched across the front edges or the waist seam, which a tailor would do on a coat at this price point.",
+        "Pattern scale cannot be judged: nothing records the plaid's real size, so it is not scored."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C06/A_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 5,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C06/A_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 5,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C06/A_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 5,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        }
+      }
+    },
+    "C07": {
+      "worked": [
+        "The coat's shape holds across all four colourways: shape IoU against the drawing is 0.87-0.96, and lapels, waist seam and skirt pleats are the same in every image.",
+        "Each output carries its own colourway's ground and figure colours: ΔE 2.3-3.6 for the grey-blue and red colourways, 4.9-6.2 for the violet and blue ones.",
+        "Within one colourway the three samples agree closely with each other."
+      ],
+      "issues": [
+        "The four colourways do not read as one fabric design. Each swatch is a different fragment of a large repeat, and the model draws a different motif from each: a lily outline, leaves only, mixed flowers, sparse stems. A colourway set needs every swatch cut at the same place in the repeat.",
+        "Colourway 1 put two of its three samples on a dark vignette instead of the plain grey the prompt asks for, and those two lose buttons from the double-breasted front.",
+        "Motif scale cannot be judged against anything, so it is not scored."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C07/A_cw1_r1_s1.png": {
+          "silhouette": 4,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 4,
+          "construction": 3,
+          "usable_for_planning": 2
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw1_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 4,
+          "usable_for_planning": 3
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw1_r1_s3.png": {
+          "silhouette": 4,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 4,
+          "construction": 3,
+          "usable_for_planning": 2
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw2_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 3,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw2_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 3,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw2_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 3,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw3_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw3_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw3_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw4_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw4_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C07/A_cw4_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        }
+      }
+    },
+    "C08": {
+      "worked": [
+        "Only the colour changes. The dress, drape, stripe count and placement, mannequin, purple bow and background are the base photo's, and the shape IoU against it is 0.96-0.97.",
+        "Navy becomes a burgundy close to the target (ΔE 7.4-9.4 from #7A1F2B) and the cream stays cream (ΔE 4.3-4.8 from the original)."
+      ],
+      "issues": [
+        "The burgundy lands about ΔE 8 from the requested hex: visibly the same family, not the same colour. A colour-critical recolour would need a correction step after generation.",
+        "SSIM against the base is only 0.18-0.26, but that measures the model re-rendering every stripe a few pixels off, not a change in layout. It is reported and not used for scoring."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C08/A_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 5,
+          "pattern_scale": 5,
+          "colour": 4,
+          "texture": 5,
+          "construction": 5,
+          "usable_for_planning": 5
+        },
+        "results/gpt-image-2.6-sunburst/C08/A_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 5,
+          "pattern_scale": 5,
+          "colour": 4,
+          "texture": 5,
+          "construction": 5,
+          "usable_for_planning": 5
+        },
+        "results/gpt-image-2.6-sunburst/C08/A_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 5,
+          "pattern_scale": 5,
+          "colour": 4,
+          "texture": 5,
+          "construction": 5,
+          "usable_for_planning": 5
+        }
+      }
+    },
+    "C09": {
+      "worked": [
+        "Both prints are placed in the right zones in every sample: the stripe-and-sprig print on the bodice, sleeves and centre front panel, the red floral print on the side panels and as the hem border. The drawing does not mark the panels, so the placement comes from the text alone.",
+        "Ruffled cap sleeves with red picot trim, gathered bodice, waistband and gathered skirt follow the drawing.",
+        "Print scale is close to the real dress for both fabrics."
+      ],
+      "issues": [
+        "Prints are cleaner and more regular than the hand-blocked originals, which reads as a modern reproduction rather than the same cloth.",
+        "No automatic zone check exists yet, so placement is judged by eye only."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C09/A_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C09/A_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C09/A_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": 4,
+          "colour": 4,
+          "texture": 4,
+          "construction": 5,
+          "usable_for_planning": 4
+        }
+      }
+    },
+    "C10": {
+      "worked": [
+        "The velvet reads as velvet: pile, soft sheen on the folds and deep shadow in the gores. Unlike the satin in C01, the material came through.",
+        "Construction follows the drawing: off-the-shoulder neckline, deep lace bertha, pointed bodice with side buttons, gored skirt and very large draped puff sleeves."
+      ],
+      "issues": [
+        "The colour is darker than the swatch (L* 6-8 against 11.7, ΔE 4.8-6.6), a deep burgundy rather than wine.",
+        "The sleeves are symmetrical balloons; the real ones droop toward the elbow and show a gold satin lining, which no input mentions."
+      ],
+      "scores": {
+        "results/gpt-image-2.6-sunburst/C10/A_r1_s1.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 5,
+          "construction": 4,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C10/A_r1_s2.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 5,
+          "construction": 4,
+          "usable_for_planning": 4
+        },
+        "results/gpt-image-2.6-sunburst/C10/A_r1_s3.png": {
+          "silhouette": 5,
+          "fabric_pattern": 4,
+          "pattern_scale": null,
+          "colour": 3,
+          "texture": 5,
+          "construction": 4,
           "usable_for_planning": 4
         }
       }

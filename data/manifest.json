@@ -221,7 +221,7 @@
       "material": "one design in 4 colourways from a museum textile sample book",
       "status": "ready",
       "source": "Line drawing reused from C05; swatches cut from one page of a Met textile sample book (229185, 1890s) showing one floral damask in 11 colourways",
-      "autocheck": true,
+      "autocheck": false,
       "inputs": [
         "inputs/line_drawing.png",
         "inputs/fabric_1.jpg"
@@ -297,7 +297,7 @@
       "task": "T5",
       "item": "girl's dress with a gathered bodice, ruffled cap sleeves with red trim and a full gathered skirt",
       "material": "two prints placed by zone: stripe-and-sprig front panel, red floral side panels and hem border",
-      "status": "designed",
+      "status": "ready",
       "source": "The Met 159521 (Dress, ca. 1850, cotton, 2009.300.935)",
       "fixture": {
         "source_image": "source/met_159521_0.jpg",
@@ -336,14 +336,14 @@
         "visual: each print in its zone",
         "ΔE of each zone against its swatch"
       ],
-      "notes": "Two swatches: fabric.jpg from the front panel, fabric_b.jpg from a side panel."
+      "notes": "Two swatches: fabric.jpg from the front panel, fabric_b.jpg from a side panel. Line drawing traced by the image model from the ground-truth photo (synthetic). The traced drawing shows the hem band but not the seams between the front panel and the side panels, so the side-panel placement rests on the text alone."
     },
     {
       "id": "C10",
       "task": "T6",
       "item": "woman's evening dress with an off-the-shoulder neckline, a deep lace bertha, a pointed fitted bodice and a long gored skirt, in the swatch fabric with cream lace",
       "material": "construction: large draped puff sleeves; silk velvet",
-      "status": "designed",
+      "status": "ready",
       "source": "The Met 85420 (Evening dress, 1893-95, silk, C.I.54.4.1a-c)",
       "inputs": [
         "inputs/line_drawing.png",
@@ -371,7 +371,7 @@
           2840
         ]
       },
-      "notes": "Velvet is the second material test after C01 satin: pile and sheen."
+      "notes": "Velvet is the second material test after C01 satin: pile and sheen. Line drawing traced by the image model from the ground-truth photo (synthetic)."
     }
   ]
 }

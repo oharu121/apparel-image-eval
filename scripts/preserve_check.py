@@ -4,14 +4,14 @@
 
 Writes results/preserve.csv. Per case task:
     T2 re-fabric   shape_iou against the base photo, dE_mean against the new swatch
-    T3 colourways  shape_iou of each output against the same sample of colourway 1,
-                   dE_mean against its own swatch
+    T3 colourways  shape_iou of each output against the line drawing's filled outline, the same
+                   reference for every colourway; dE_mean against its own swatch
     T4 recolour    dE of the dark colour against the target hex, dE of the light colour against
                    the base photo's light colour, ssim of luminance against the base photo
 
 The model reframes its output, so shapes are compared after cropping each garment mask to its
 bounding box and resizing to a common 256x384 frame. That measures silhouette, not position.
-The floor is high: two unrelated garments, the C05 coat and the C02 dress, already score 0.743,
+The floor is high: two unrelated garments, the C05 coat and the C02 dress, already score 0.839,
 because any full-length garment fills most of its own box. Read shape_iou against that, not 0.
 """
 
@@ -23,21 +23,57 @@ import numpy as np
 from skimage.color import deltaE_ciede2000, rgb2lab
 from skimage.metrics import structural_similarity
 
-from autocheck import dominant, garment_mask, lab
+from autocheck import dominant, lab
 from lib import RESULTS, case_dir, load_manifest, rel
 
 FRAME = (256, 384)
 
 
+def grabcut_mask(rgb):
+    """Foreground mask by GrabCut, with a 2% border taken as certain background.
+
+    garment_mask's single colour distance from the border fails here in two ways seen in C07:
+    a white garment on a light grey ground sits under its threshold, and an output that ignores
+    the prompt and puts the garment on a dark vignette makes the border colour meaningless.
+    GrabCut models foreground and background colour separately, so neither breaks it.
+    """
+    h, w = rgb.shape[:2]
+    f = 512 / max(h, w)
+    small = cv2.resize(rgb, (int(w * f), int(h * f)), interpolation=cv2.INTER_AREA)
+    sh, sw = small.shape[:2]
+    b = max(2, int(0.02 * max(sh, sw)))
+    mask = np.zeros((sh, sw), np.uint8)
+    bgd, fgd = np.zeros((1, 65), np.float64), np.zeros((1, 65), np.float64)
+    cv2.setRNGSeed(0)
+    cv2.grabCut(cv2.cvtColor(small, cv2.COLOR_RGB2BGR), mask, (b, b, sw - 2 * b, sh - 2 * b), bgd, fgd, 5, cv2.GC_INIT_WITH_RECT)
+    fg = np.isin(mask, (cv2.GC_FGD, cv2.GC_PR_FGD)).astype(np.uint8)
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(fg)
+    if n > 1:
+        fg = (labels == 1 + np.argmax(stats[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    return cv2.resize(fg, (w, h), interpolation=cv2.INTER_NEAREST).astype(bool)
+
+
 def normalised(path):
     """Garment mask and greyscale image, cropped to the garment and resized to FRAME."""
     rgb, img_lab = lab(path)
-    mask = garment_mask(img_lab)
+    mask = grabcut_mask(rgb)
     ys, xs = np.where(mask)
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
     m = cv2.resize(mask[y0:y1, x0:x1].astype(np.uint8), FRAME, interpolation=cv2.INTER_NEAREST).astype(bool)
     g = cv2.resize(cv2.cvtColor(rgb[y0:y1, x0:x1], cv2.COLOR_RGB2GRAY), FRAME, interpolation=cv2.INTER_AREA)
     return m, g, img_lab[mask]
+
+
+def drawing_silhouette(path):
+    """Filled outer outline of a black-on-white line drawing, cropped and resized to FRAME."""
+    g = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
+    ink = cv2.morphologyEx((g < 128).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+    contours, _ = cv2.findContours(ink, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    fill = np.zeros_like(ink)
+    cv2.drawContours(fill, [max(contours, key=cv2.contourArea)], -1, 1, cv2.FILLED)
+    ys, xs = np.where(fill)
+    crop = fill[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    return cv2.resize(crop, FRAME, interpolation=cv2.INTER_NEAREST).astype(bool)
 
 
 def iou(a, b):
@@ -75,15 +111,12 @@ def main():
                 rows.append({"case": c["id"], "file": rel(o), "shape_iou": iou(bm, om),
                              "dE_mean": de_mean(d / "inputs/fabric.jpg", ol)})
         elif c["task"] == "T3":
-            ref = {}
+            ref = drawing_silhouette(d / "inputs/line_drawing.png")
             for o in outs:
-                k, s = map(int, re.search(r"_cw(\d+)_r\d+_s(\d+)", o.stem).groups())
+                k = int(re.search(r"_cw(\d+)_", o.stem).group(1))
                 om, _, ol = normalised(o)
-                if k == 1:
-                    ref[s] = om
                 rows.append({"case": c["id"], "file": rel(o), "colourway": k,
-                             "shape_iou": iou(ref[s], om) if s in ref else "",
-                             "dE_mean": de_mean(d / c["colourways"][k - 1], ol)})
+                             "shape_iou": iou(ref, om), "dE_mean": de_mean(d / c["colourways"][k - 1], ol)})
         else:
             bm, bg, bl = normalised(d / "inputs/base_photo.jpg")
             base_light = dark_light(bl)[1]
